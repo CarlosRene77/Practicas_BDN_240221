@@ -7,3 +7,5 @@
 |ID|Numero de Practica| Nombre de la Práctica|Potenciador|Estatus|
 |---|---|---|---|---|
 |1.|Práctica 02|Conexión Remota en MySQL| 42|🟡En desarrollo|
+
+
