@@ -4,3 +4,7 @@
 
 ---
 
+|ID|Numero de Practica| Nombre de la Práctica|Potenciador|Estatus|
+|---|---|---|---|---|
+|1.|Metodologia de evaluacion de la materia|Transcribir en libreta y comprender la metodologia y fechas de evaluacion de la asignatura| 5|🟢concluida|
+|2.|Conexiones remotas para bases de datos SQL|Crear y administrar usuarios y privilegios para conexiones desde internet o redes locales| ??|🟡En desarrollo|
