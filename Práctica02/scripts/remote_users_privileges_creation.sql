@@ -28,8 +28,8 @@ GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
 /* ADMIN */
 GRANT ALL PRIVILEGES ON db_test.* TO 'admin';
 /* SUPPORT */
-GRANT SELECT, INSERT, UPDATE ON db_test.tb_users TO 'support';
-GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'support';
+GRANT SELECT, UPDATE ON db_test.tb_users TO 'support';
+GRANT SELECT, UPDATE ON db_test.tb_products TO 'support';
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.* TO 'jonhy.neri'@'%';
 
 /* SELLER */

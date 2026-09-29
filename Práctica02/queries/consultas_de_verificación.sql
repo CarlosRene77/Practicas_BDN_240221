@@ -94,3 +94,23 @@ GROUP BY
     b.operation_date 
 ORDER BY b.operation_date ASC  
 LIMIT 0, 1000;
+
+
+SELECT count(*) FROM tb_products;
+
+/* Consulta para saber la trazabilidad de los productos*/
+SELECT * FROM vw_trazabilidad_productos ORDER BY operation_date ASC LIMIT 10;
+
+/*Consulta la trazabilidad de usuarios*/
+SELECT * FROM vw_trazabilidad_usuarios ORDER BY operation_date ASC;
+
+SELECT
+    id,
+    name,
+    inserted_by,
+    roles,
+    operation_description,
+    operation_date
+FROM vw_trazabilidad_productos
+ORDER BY operation_date ASC
+LIMIT 10;
