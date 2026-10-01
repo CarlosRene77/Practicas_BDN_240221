@@ -183,15 +183,18 @@ SELECT  TO_USER AS usuario,  TO_HOST AS host, FROM_USER AS rol, FROM_HOST AS rol
 FROM mysql.role_edges ORDER BY TO_USER, FROM_USER;
 
 /* 9. Verificar el total de procedimientos almacenados que existen en la base de datos db_test_7b */
-SHOW PROCEDURE STATUS WHERE Db = 'db_test_7b';
-
+SHOW PROCEDURE STATUS WHERE Db = 'db_test';
 
 /* 10. Verificación de Productos*/
-/* Contabilizar los productos */
+SELECT * FROM tb_products;
+/* 11. Contabilizar los productos */
 SELECT COUNT(*) FROM tb_products;
 
-/* Visualizar todos los productos */
+/* 12. Visualizar todos los productos */
 SELECT * FROM tb_products;
 
-/* Consulta para saber la trazabilidad de los productos */
-SELECT * FROM vw_trazabilidad_productos LIMIT 10;
+/* 13. Consulta para saber la trazabilidad de los productos */
+SELECT * FROM vw_trazabilidad_productos ORDER BY operation_date DESC LIMIT 10;
+
+/* 14. Consulta la trazaabilidad de usuarios*/
+SELECT * FROM vw_trazabilidad_usuarios ORDER BY operation_date ASC; 
