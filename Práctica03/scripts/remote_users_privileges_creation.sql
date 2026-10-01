@@ -32,6 +32,9 @@ GRANT SELECT ON db_test.tbc_categories TO 'support';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
 GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.* TO 'jonhy.neri'@'%';
 
+
+GRANT SELECT, INSERT, UPDATE ON db_test.tbc_categories to 'support';
+
 /* SELLER */
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
 
