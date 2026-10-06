@@ -46,14 +46,14 @@ GRANT SELECT ON db_test.tbc_categories TO 'seller';
 GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
 GRANT 'superadmin' TO 'carlos.morales'@'%'; -- <--- ¡ESTA LÍNEA FALTABA!
 GRANT 'admin' TO 'marco.ramirez'@'%';
-GRANT 'support' TO 'uriel.valenzuela'@'%';
+GRANT 'support' TO 'adrian.rios'@'%';
 GRANT 'seller' TO 'pablo.reyes'@'%';
 GRANT 'seller' TO 'saul.barrios'@'%';
 
 /* Esto permite que el rol se active automaticamente cuando el usuario inicia sesion */
 SET DEFAULT ROLE 'superadmin' TO 'carlos.morales'@'%';
 SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
-SET DEFAULT ROLE 'support' TO 'uriel.valenzuela'@'%';
+SET DEFAULT ROLE 'support' TO 'adrian.rios'@'%';
 SET DEFAULT ROLE 'seller' TO 'pablo.reyes'@'%';
 SET DEFAULT ROLE 'seller' TO 'saul.barrios'@'%';
 
