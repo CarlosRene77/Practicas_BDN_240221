@@ -1,5 +1,6 @@
-/* CREACION DE USUARIOS REMOTOS (Seguro si ya existen) */
-
+/* =========================================================
+   1. CREACIÓN DE USUARIOS REMOTOS
+   ========================================================= */
 CREATE USER IF NOT EXISTS 'carlos.morales'@'%' IDENTIFIED BY '240221';
 CREATE USER IF NOT EXISTS 'marco.ramirez'@'%' IDENTIFIED BY 'qwerty123';
 CREATE USER IF NOT EXISTS 'uriel.valenzuela'@'%' IDENTIFIED BY '240485';
@@ -9,10 +10,9 @@ CREATE USER IF NOT EXISTS 'jonhy.neri'@'%' IDENTIFIED BY '240598';
 CREATE USER IF NOT EXISTS 'luis.cazares'@'%' IDENTIFIED BY '240343';
 CREATE USER IF NOT EXISTS 'saul.barrios'@'%' IDENTIFIED BY '240196';
 
-/* ASIGNACION DE PRIVILEGIOS DEL SUPER USUARIO */
-GRANT ALL PRIVILEGES ON *.* TO 'carlos.morales'@'%' WITH GRANT OPTION;
-
-/* CREACION DE ROLES PARA LOS USUARIOS DE LA PLATAFORMA DE ECOMMERCE */
+/* =========================================================
+   2. CREACIÓN DE ROLES ECOMMERCE
+   ========================================================= */
 CREATE ROLE IF NOT EXISTS 'superadmin';
 CREATE ROLE IF NOT EXISTS 'admin';
 CREATE ROLE IF NOT EXISTS 'seller';
@@ -21,43 +21,44 @@ CREATE ROLE IF NOT EXISTS 'common_user';
 CREATE ROLE IF NOT EXISTS 'user_not_registered';
 CREATE ROLE IF NOT EXISTS 'support';
 
-/* ASIGNACION DE PRIVILEGIOS A LOS ROLES DE LA PLATAFORMA ECOMMERCE */
--- ADMIN
-/* SUPERADMIN*/
-GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
+/* =========================================================
+   3. ASIGNACIÓN DE PRIVILEGIOS A LOS ROLES
+   ========================================================= */
+-- SUPERADMIN (Acceso total)
+GRANT ALL PRIVILEGES ON *.* TO 'superadmin' WITH GRANT OPTION;
+
+-- ADMIN (Acceso total a la base de datos de la app)
 GRANT ALL PRIVILEGES ON db_test.* TO 'admin';
+
+-- SUPPORT (Lectura/escritura en tablas clave de atención)
 GRANT SELECT, UPDATE ON db_test.tb_users TO 'support';
 GRANT SELECT, UPDATE ON db_test.tb_products TO 'support';
-GRANT SELECT ON db_test.tbc_categories TO 'support';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbc_categories TO 'support';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
-GRANT SELECT, INSERT, UPDATE, DELETE ON db_test.* TO 'jonhy.neri'@'%';
+GRANT EXECUTE ON PROCEDURE db_test.sp_soft_delete_user TO 'support'@'%';
 
-
-GRANT SELECT, INSERT, UPDATE ON db_test.tbc_categories to 'support';
-
-/* SELLER */
+-- SELLER (Gestión de catálogo)
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
-
 GRANT SELECT ON db_test.tbc_categories TO 'seller';
 
-
-/* ASIGNAR EL ROL AL USUARIO */
-/* Super admin*/
-GRANT ALL PRIVILEGES ON *.* TO 'superadmin';
-GRANT 'superadmin' TO 'carlos.morales'@'%'; -- <--- ¡ESTA LÍNEA FALTABA!
+/* =========================================================
+   4. ASIGNACIÓN DE ROLES A LOS USUARIOS
+   ========================================================= */
+GRANT 'superadmin' TO 'carlos.morales'@'%';
 GRANT 'admin' TO 'marco.ramirez'@'%';
-GRANT 'support' TO 'adrian.rios'@'%';
-GRANT 'seller' TO 'pablo.reyes'@'%';
-GRANT 'seller' TO 'saul.barrios'@'%';
+GRANT 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
 
-/* Esto permite que el rol se active automaticamente cuando el usuario inicia sesion */
+/* =========================================================
+   5. ACTIVACIÓN DE ROLES POR DEFECTO
+   ========================================================= */
 SET DEFAULT ROLE 'superadmin' TO 'carlos.morales'@'%';
-SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%';
+SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%', 'jonhy.neri'@'%';
 SET DEFAULT ROLE 'support' TO 'adrian.rios'@'%';
-SET DEFAULT ROLE 'seller' TO 'pablo.reyes'@'%';
-SET DEFAULT ROLE 'seller' TO 'saul.barrios'@'%';
+SET DEFAULT ROLE 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
 
--- 7. REFRESCAR PRIVILEGIOS Y MENSAJE DE CONFIRMACION
+/* =========================================================
+   6. FINALIZACIÓN
+   ========================================================= */
 FLUSH PRIVILEGES;
 
-SELECT "Los usuarios y privilegios han sido creados correctamente" AS mensaje;
+SELECT "Los usuarios, roles y privilegios han sido creados y asignados correctamente" AS mensaje;
