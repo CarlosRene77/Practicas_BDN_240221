@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "ffe8acbe-9c6d-4ddc-9205-c450b2d04069",
+  "status": "current",
+  "command": "deliver",
+  "type": "erd",
+  "input": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\candidate-compact.json",
+  "output": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\erd-db-test.html",
+  "specification": {
+    "sha256": "ad6a5137de78805a910d490dd2b684a8c7bf94550611487b8fdcab3293600d61",
+    "bytes": 10785
+  },
+  "artifact": {
+    "sha256": "22e4418a76e65295415c8ee7032fda2d125cf42e168fb9ffd704676b28cb9038",
+    "bytes": 892123
+  }
+}
