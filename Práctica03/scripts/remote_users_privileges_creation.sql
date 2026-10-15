@@ -41,6 +41,13 @@ GRANT EXECUTE ON PROCEDURE db_test.sp_soft_delete_user TO 'support'@'%';
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
 GRANT SELECT ON db_test.tbc_categories TO 'seller';
 
+--BUYER--
+
+GRANT SELECT, INSERT, UPDATE ON db_test.tb_carts TO 'buyer';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_carts_items TO 'buyer';
+GRANT SELECT, INSERT ON db_test.tb_buyer_orders TO 'buyer';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_users_wishlist_products TO 'buyer';
+
 /* =========================================================
    4. ASIGNACIÓN DE ROLES A LOS USUARIOS
    ========================================================= */
