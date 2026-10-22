@@ -9,6 +9,8 @@ CREATE USER IF NOT EXISTS 'pablo.reyes'@'%' IDENTIFIED BY '240148';
 CREATE USER IF NOT EXISTS 'jonhy.neri'@'%' IDENTIFIED BY '240598';
 CREATE USER IF NOT EXISTS 'luis.cazares'@'%' IDENTIFIED BY '240343';
 CREATE USER IF NOT EXISTS 'saul.barrios'@'%' IDENTIFIED BY '240196';
+CREATE USER IF NOT EXISTS 'app_movil'@'%' IDENTIFIED BY 'Mobile890';
+CREATE USER IF NOT EXISTS 'app_web'@'%' IDENTIFIED BY 'Web123';
 
 /* =========================================================
    2. CREACIÓN DE ROLES ECOMMERCE
@@ -41,12 +43,16 @@ GRANT EXECUTE ON PROCEDURE db_test.sp_soft_delete_user TO 'support'@'%';
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
 GRANT SELECT ON db_test.tbc_categories TO 'seller';
 
---BUYER--
+-- BUYER --
 
 GRANT SELECT, INSERT, UPDATE ON db_test.tb_carts TO 'buyer';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbd_carts_items TO 'buyer';
 GRANT SELECT, INSERT ON db_test.tb_buyer_orders TO 'buyer';
 GRANT SELECT, INSERT, UPDATE ON db_test.tbd_users_wishlist_products TO 'buyer';
+
+-- user not registered --
+GRANT INSERT ON db_test.tb_users TO 'user_not_registered';
+GRANT INSERT ON db_test.tb_people TO 'user_not_registered';
 
 /* =========================================================
    4. ASIGNACIÓN DE ROLES A LOS USUARIOS
@@ -54,6 +60,7 @@ GRANT SELECT, INSERT, UPDATE ON db_test.tbd_users_wishlist_products TO 'buyer';
 GRANT 'superadmin' TO 'carlos.morales'@'%';
 GRANT 'admin' TO 'marco.ramirez'@'%';
 GRANT 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
+GRANT 'user_not_registered' TO 'app_movil'@'%', 'app_web'@'%';
 
 /* =========================================================
    5. ACTIVACIÓN DE ROLES POR DEFECTO
@@ -62,6 +69,7 @@ SET DEFAULT ROLE 'superadmin' TO 'carlos.morales'@'%';
 SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%', 'jonhy.neri'@'%';
 SET DEFAULT ROLE 'support' TO 'adrian.rios'@'%';
 SET DEFAULT ROLE 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
+SET DEFAULT ROLE 'user_not_registered' TO 'app_movil'@'%', 'app_web'@'%';
 
 /* =========================================================
    6. FINALIZACIÓN
