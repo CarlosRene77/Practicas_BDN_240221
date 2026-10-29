@@ -19,7 +19,7 @@ CREATE ROLE IF NOT EXISTS 'superadmin';
 CREATE ROLE IF NOT EXISTS 'admin';
 CREATE ROLE IF NOT EXISTS 'seller';
 CREATE ROLE IF NOT EXISTS 'buyer';
-CREATE ROLE IF NOT EXISTS 'common_user';
+CREATE ROLE IF NOT EXISTS 'common_user';  
 CREATE ROLE IF NOT EXISTS 'user_not_registered';
 CREATE ROLE IF NOT EXISTS 'support';
 
@@ -53,6 +53,9 @@ GRANT SELECT, INSERT, UPDATE ON db_test.tbd_users_wishlist_products TO 'buyer';
 -- user not registered --
 GRANT INSERT ON db_test.tb_users TO 'user_not_registered';
 GRANT INSERT ON db_test.tb_people TO 'user_not_registered';
+
+-- common user--
+GRANT SELECT ON db_test.tb_products TO 'common_user';
 
 /* =========================================================
    4. ASIGNACIÓN DE ROLES A LOS USUARIOS
