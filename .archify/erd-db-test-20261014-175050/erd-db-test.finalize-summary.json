@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "erd",
+  "quality": "standard",
+  "specification": {
+    "path": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\candidate-compact.json",
+    "sha256": "ad6a5137de78805a910d490dd2b684a8c7bf94550611487b8fdcab3293600d61",
+    "bytes": 10785
+  },
+  "artifact": {
+    "path": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\erd-db-test.html",
+    "sha256": "22e4418a76e65295415c8ee7032fda2d125cf42e168fb9ffd704676b28cb9038",
+    "bytes": 892123
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\erd-db-test.finalize.json",
+    "summaryReceipt": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\erd-db-test.finalize-summary.json",
+    "browserCheckReceipt": "C:\\Users\\ti_la\\OneDrive\\Escritorio\\Practicas_BDN_240221\\.archify\\erd-db-test-20261014-175050\\erd-db-test.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-14T23:52:42.146Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3870,
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 1,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "product_provider_user",
+            "from": "tbd_products_users_providers",
+            "to": "tb_users",
+            "label": "fk_user1",
+            "collectionIndex": 10,
+            "artifactIndex": 11
+          },
+          "bends": 6,
+          "stretch": 1.51
+        }
+      ],
+      "truncated": false
+    },
+    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  }
+}

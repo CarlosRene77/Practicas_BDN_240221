@@ -1,0 +1,5 @@
+USE db_test;
+
+SHOW TABLES;
+
+SHOW PROCEDURE STATUS WHERE Db= 'db_test';

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "diagram_type": "erd",
+  "meta": {
+    "title": "Esquema de db_test",
+    "locale": "es",
+    "subtitle": "Estructura SQL y relaciones declaradas · respaldo14102026.sql",
+    "output": ".archify/erd-db-test-20261014-175050/erd-db-test.html",
+    "quality_profile": "standard",
+    "views": [
+      {"id": "commerce", "label": "Compras", "focus": ["tb_carts", "tbd_cart_items", "tbb_orders", "tb_seller_orders", "tbd_order_items", "tb_payments"], "note": "Carritos, pedidos, detalle y pagos."},
+      {"id": "catalog", "label": "Catálogo", "focus": ["tb_products", "tbc_categories", "tbd_products_categories", "tbd_products_users_providers"], "note": "Productos, categorías y asociaciones."},
+      {"id": "accounts", "label": "Usuarios", "focus": ["tb_users", "tbd_users_wishlist_products"], "note": "Identidades y productos en listas de deseos."},
+      {"id": "relations", "label": "Relaciones", "focus": ["tb_users", "tb_carts", "tbb_orders", "tbc_categories", "tb_products", "tbd_users_wishlist_products"], "note": "Se muestran solo las llaves foráneas declaradas en el respaldo."},
+      {"id": "all", "label": "Todas las tablas", "focus": ["tb_users", "tb_carts", "tbd_cart_items", "tbb_orders", "tb_seller_orders", "tbd_order_items", "tb_payments", "tb_products", "tbc_categories", "tbd_products_categories", "tbd_products_users_providers", "tbd_users_wishlist_products", "tb_logs"]}
+    ]
+  },
+  "layout": {"mode": "grid", "gapX": 72, "gapY": 34, "entityW": 286, "headerH": 32, "rowH": 23},
+  "entities": [
+    {"id":"tb_users","label":"tb_users","sublabel":"Filas: 12","tag":"Cuentas","row":0,"col":0,"attributes":[
+      {"name":"ID","type":"int NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"email","type":"varchar(80) NOT NULL","key":"uk"},
+      {"name":"nickname","type":"varchar(100) NOT NULL","key":"uk"},
+      {"name":"password","type":"varchar(255) NOT NULL"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"},
+      {"name":"last_login","type":"datetime DEFAULT NULL"},
+      {"name":"status","type":"bit(1) NOT NULL DEFAULT b'1'"}
+    ]},
+    {"id":"tb_carts","label":"tb_carts","sublabel":"Filas: 0","tag":"Compras","row":0,"col":1,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"user_ID","type":"int NOT NULL","key":"uk","references":"tb_users.ID"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbd_cart_items","label":"tbd_cart_items","sublabel":"Filas: 0","tag":"Compras","row":1,"col":1,"attributes":[
+      {"name":"cart_ID","type":"int unsigned NOT NULL","key":["pk","fk"],"references":"tb_carts.ID"},
+      {"name":"product_offer_ID","type":"int unsigned NOT NULL","key":"pk"},
+      {"name":"quantity","type":"int unsigned NOT NULL DEFAULT '1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbb_orders","label":"tbb_orders","sublabel":"Filas: 0","tag":"Compras","row":2,"col":1,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"key","type":"varchar(40) NOT NULL"},
+      {"name":"user_ID","type":"int NOT NULL","key":"fk","references":"tb_users.ID"},
+      {"name":"total_products","type":"int NOT NULL"},
+      {"name":"total_cost","type":"decimal(10,3) NOT NULL DEFAULT '0.000'"},
+      {"name":"status_string","type":"enum('Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended') NOT NULL DEFAULT 'Registered'"},
+      {"name":"status","type":"bit(1) DEFAULT b'1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tb_seller_orders","label":"tb_seller_orders","sublabel":"Filas: 0","tag":"Compras","row":3,"col":1,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"order_ID","type":"int unsigned NOT NULL","key":["uk","fk"],"references":"tbb_orders.ID"},
+      {"name":"seller_ID","type":"int NOT NULL","key":"fk","references":"tb_users.ID"},
+      {"name":"subtotal","type":"decimal(12,2) NOT NULL DEFAULT '0.00'"},
+      {"name":"shipping_cost","type":"decimal(12,2) NOT NULL DEFAULT '0.00'"},
+      {"name":"fulfillment_status","type":"enum('Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned') NOT NULL DEFAULT 'Pending'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbd_order_items","label":"tbd_order_items","sublabel":"Filas: 0","tag":"Compras","row":4,"col":1,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"seller_order_ID","type":"int unsigned NOT NULL","key":"fk","references":"tb_seller_orders.ID"},
+      {"name":"product_offer_ID","type":"int unsigned NOT NULL"},
+      {"name":"product_name","type":"varchar(255) NOT NULL"},
+      {"name":"quantity","type":"int unsigned NOT NULL"},
+      {"name":"unit_price","type":"decimal(12,2) NOT NULL"},
+      {"name":"subtotal","type":"decimal(12,2) GENERATED ALWAYS AS ((`quantity` * `unit_price`)) STORED"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tb_payments","label":"tb_payments","sublabel":"Filas: 0","tag":"Compras","row":5,"col":1,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"order_ID","type":"int unsigned NOT NULL","key":"fk","references":"tbb_orders.ID"},
+      {"name":"amount","type":"decimal(12,2) NOT NULL"},
+      {"name":"currency","type":"char(3) NOT NULL DEFAULT 'MXN'"},
+      {"name":"payment_method","type":"enum('Card','SPEI','Transfer','Cash') NOT NULL"},
+      {"name":"provider","type":"varchar(50) DEFAULT NULL"},
+      {"name":"provider_reference","type":"varchar(150) DEFAULT NULL"},
+      {"name":"payment_status","type":"enum('Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded') NOT NULL DEFAULT 'Pending'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"paid_date","type":"datetime DEFAULT NULL"},
+      {"name":"last_update","type":"datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tb_products","label":"tb_products","sublabel":"Filas: 15 007","tag":"Catálogo","row":0,"col":2,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"SKU","type":"varchar(50) NOT NULL","key":"uk"},
+      {"name":"name","type":"varchar(250) NOT NULL"},
+      {"name":"description","type":"text DEFAULT NULL"},
+      {"name":"current_price","type":"decimal(10,2) NOT NULL DEFAULT '0.00'"},
+      {"name":"current_stock","type":"int unsigned NOT NULL DEFAULT '0'"},
+      {"name":"status","type":"bit(1) DEFAULT b'1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbc_categories","label":"tbc_categories","sublabel":"Filas: 100","tag":"Catálogo","row":1,"col":2,"attributes":[
+      {"name":"ID","type":"int unsigned NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"name","type":"varchar(120) NOT NULL","key":"uk"},
+      {"name":"description","type":"text DEFAULT NULL"},
+      {"name":"sup_id_category","type":"int unsigned DEFAULT NULL","key":"fk","references":"tbc_categories.ID"},
+      {"name":"status","type":"bit(1) NOT NULL DEFAULT b'1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbd_products_categories","label":"tbd_products_categories","sublabel":"Filas: 22 728","tag":"Catálogo","row":2,"col":2,"attributes":[
+      {"name":"category_ID","type":"int unsigned NOT NULL","key":["pk","fk"],"references":"tbc_categories.ID"},
+      {"name":"product_ID","type":"int unsigned NOT NULL","key":["pk","fk"],"references":"tb_products.ID"},
+      {"name":"status","type":"bit(1) NOT NULL DEFAULT b'1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbd_products_users_providers","label":"tbd_products_users_providers","sublabel":"Filas: 0","tag":"Catálogo","row":3,"col":2,"attributes":[
+      {"name":"user_ID","type":"int NOT NULL","key":["pk","fk"],"references":"tb_users.ID"},
+      {"name":"product_ID","type":"int unsigned NOT NULL","key":["pk","fk"],"references":"tb_products.ID"},
+      {"name":"type_ownership","type":"enum('Owner','Reseller','Distributor') DEFAULT NULL"},
+      {"name":"status","type":"bit(1) NOT NULL DEFAULT b'1'"},
+      {"name":"available_date","type":"datetime NOT NULL"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tbd_users_wishlist_products","label":"tbd_users_wishlist_products","sublabel":"Filas: 0","tag":"Listas de deseos","row":0,"col":3,"attributes":[
+      {"name":"user_ID","type":"int NOT NULL","key":["pk","fk"],"references":"tb_users.ID"},
+      {"name":"product_ID","type":"int unsigned NOT NULL","key":["pk","fk"],"references":"tb_products.ID"},
+      {"name":"status","type":"bit(1) NOT NULL DEFAULT b'1'"},
+      {"name":"creation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"last_update","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}
+    ]},
+    {"id":"tb_logs","label":"tb_logs","sublabel":"Filas: 37 853","tag":"Auditoría","row":0,"col":4,"attributes":[
+      {"name":"ID","type":"int NOT NULL AUTO_INCREMENT","key":"pk"},
+      {"name":"table_name","type":"varchar(100) NOT NULL"},
+      {"name":"operation","type":"enum('Create','Read','Update','Delete') NOT NULL"},
+      {"name":"db_user","type":"varchar(80) NOT NULL"},
+      {"name":"description","type":"text DEFAULT NULL"},
+      {"name":"operation_date","type":"datetime NOT NULL DEFAULT CURRENT_TIMESTAMP"},
+      {"name":"operation_status","type":"varchar(20) DEFAULT NULL"}
+    ]}
+  ],
+  "relationships": [
+    {"id":"cart_user","from":"tb_carts","to":"tb_users","label":"fk_cart_user · user_ID","fromCardinality":"one","toCardinality":"one"},
+    {"id":"cart_item_cart","from":"tbd_cart_items","to":"tb_carts","label":"fk_cart_item_cart","fromCardinality":"many","toCardinality":"one"},
+    {"id":"order_user","from":"tbb_orders","to":"tb_users","label":"fk_user_2","fromCardinality":"many","toCardinality":"one"},
+    {"id":"seller_order_order","from":"tb_seller_orders","to":"tbb_orders","label":"fk_seller_order_order","fromCardinality":"many","toCardinality":"one"},
+    {"id":"seller_order_seller","from":"tb_seller_orders","to":"tb_users","label":"fk_seller_order_seller","fromCardinality":"many","toCardinality":"one"},
+    {"id":"order_item_seller_order","from":"tbd_order_items","to":"tb_seller_orders","label":"fk_order_item_seller_order","fromCardinality":"many","toCardinality":"one"},
+    {"id":"payment_order","from":"tb_payments","to":"tbb_orders","label":"fk_payment_order","fromCardinality":"many","toCardinality":"one"},
+    {"id":"product_category_category","from":"tbd_products_categories","to":"tbc_categories","label":"fb_category","fromCardinality":"many","toCardinality":"one"},
+    {"id":"product_category_product","from":"tbd_products_categories","to":"tb_products","label":"fk_product","fromCardinality":"many","toCardinality":"one"},
+    {"id":"product_provider_product","from":"tbd_products_users_providers","to":"tb_products","label":"fk_products2","fromCardinality":"many","toCardinality":"one"},
+    {"id":"product_provider_user","from":"tbd_products_users_providers","to":"tb_users","label":"fk_user1","fromCardinality":"many","toCardinality":"one"},
+    {"id":"wishlist_product","from":"tbd_users_wishlist_products","to":"tb_products","label":"fk_products3","fromCardinality":"many","toCardinality":"one"},
+    {"id":"wishlist_user","from":"tbd_users_wishlist_products","to":"tb_users","label":"fk_user2","fromCardinality":"many","toCardinality":"one"}
+  ],
+  "cards": [
+    {"dot":"cyan","title":"Conteo de filas","items":["El total por tabla se cuenta a partir de las tuplas de INSERT INTO del respaldo; las tablas sin INSERT de datos se muestran con 0 filas."]},
+    {"dot":"amber","title":"Alcance del diagrama","items":["Incluye todas las columnas de las 13 sentencias CREATE TABLE, tipos y definiciones de columna, claves primarias y únicas, y únicamente las relaciones FOREIGN KEY explícitas.","No se infieren llaves foráneas para columnas con índice sin una cláusula CONSTRAINT ... FOREIGN KEY declarada."]}
+  ]
+}
