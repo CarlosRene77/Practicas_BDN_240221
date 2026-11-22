@@ -26,16 +26,16 @@
 /* ---------------------------------------------------------------------
    1. Usuarios (contraseñas de ejemplo)
    --------------------------------------------------------------------- */
-CREATE USER IF NOT EXISTS 'carlos.morales'@'%'   IDENTIFIED BY 'Cambiar#Superadmin1';
-CREATE USER IF NOT EXISTS 'marco.ramirez'@'%'    IDENTIFIED BY 'Cambiar#Admin1';
-CREATE USER IF NOT EXISTS 'jonhy.neri'@'%'       IDENTIFIED BY 'Cambiar#Admin2';
-CREATE USER IF NOT EXISTS 'uriel.valenzuela'@'%' IDENTIFIED BY 'Cambiar#Usuario1';
-CREATE USER IF NOT EXISTS 'adrian.rios'@'%'      IDENTIFIED BY 'Cambiar#Soporte1';
-CREATE USER IF NOT EXISTS 'pablo.reyes'@'%'      IDENTIFIED BY 'Cambiar#Vendedor1';
-CREATE USER IF NOT EXISTS 'saul.barrios'@'%'     IDENTIFIED BY 'Cambiar#Vendedor2';
-CREATE USER IF NOT EXISTS 'luis.cazares'@'%'     IDENTIFIED BY 'Cambiar#Usuario2';
-CREATE USER IF NOT EXISTS 'app_web'@'%'          IDENTIFIED BY 'Cambiar#AppWeb1';
-CREATE USER IF NOT EXISTS 'app_movil'@'%'        IDENTIFIED BY 'Cambiar#AppMovil1';
+CREATE USER IF NOT EXISTS 'carlos.morales'@'%' IDENTIFIED BY '240221';
+CREATE USER IF NOT EXISTS 'marco.ramirez'@'%' IDENTIFIED BY 'qwerty123';
+CREATE USER IF NOT EXISTS 'uriel.valenzuela'@'%' IDENTIFIED BY '240485';
+CREATE USER IF NOT EXISTS 'adrian.rios'@'%' IDENTIFIED BY '240165';
+CREATE USER IF NOT EXISTS 'pablo.reyes'@'%' IDENTIFIED BY '240148';
+CREATE USER IF NOT EXISTS 'jonhy.neri'@'%' IDENTIFIED BY '240598';
+CREATE USER IF NOT EXISTS 'luis.cazares'@'%' IDENTIFIED BY '240343';
+CREATE USER IF NOT EXISTS 'saul.barrios'@'%' IDENTIFIED BY '240196';
+CREATE USER IF NOT EXISTS 'app_movil'@'%' IDENTIFIED BY 'Mobile890';
+CREATE USER IF NOT EXISTS 'app_web'@'%' IDENTIFIED BY 'Web123';
 
 /* ---------------------------------------------------------------------
    2. Roles

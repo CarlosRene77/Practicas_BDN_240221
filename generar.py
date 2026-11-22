@@ -14,8 +14,37 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = ROOT / "Practica04" / "backups" / "respaldo-06-11-2026.sql"
+# Edit these values when the local MySQL instance uses a password or a fixed dump.
+MYSQL_PASSWORD = ""
+RUTA_RESPALDO = ROOT / "Practica04" / "backups" / "respaldo-21-11-2026.sql"
+SOURCE = RUTA_RESPALDO
 OUT = ROOT / "diccionario_datos"
+
+CONTROL = {"tables": 25, "columns": 255, "records": 147094, "foreign_keys": 42,
+           "views": 32, "triggers": 72, "procedures": 7, "functions": 7}
+CONTROL_CHECKS = 42
+MODULES = {
+ "Usuarios": ["tb_users", "tb_people", "tb_user_addresses", "tbd_address_components"],
+ "Catálogo de productos": ["tb_products", "tbc_categories", "tbd_products_categories", "tbd_products_users_providers", "tbd_users_wishlist_products"],
+ "Carrito y órdenes": ["tb_carts", "tbd_cart_items", "tb_orders", "tbd_order_items"],
+ "Pagos": ["tb_payment_methods", "tbc_payment_methods_types", "tbd_user_payment_methods", "tb_payments", "tb_payment_transaction", "tb_refunds"],
+ "Postventa y envíos": ["tb_shipments", "tb_returns", "tbd_return_items", "tb_order_cancellations", "tbd_cancellation_items"],
+ "Auditoría": ["tb_logs"]}
+
+TABLE_DESCRIPTIONS = {
+ "tb_users":"Cuentas para iniciar sesión en la tienda.", "tb_people":"Datos personales de cada cuenta de cliente.",
+ "tb_user_addresses":"Domicilios guardados por los clientes.", "tbd_address_components":"Partes jerárquicas que forman cada domicilio.",
+ "tb_products":"Productos ofrecidos en la tienda.", "tbc_categories":"Categorías y subcategorías de productos.",
+ "tbd_products_categories":"Relación entre productos y categorías.", "tbd_products_users_providers":"Usuarios que venden o surten cada producto.",
+ "tbd_users_wishlist_products":"Productos guardados por clientes para después.", "tb_carts":"Carritos de compra de los clientes.",
+ "tbd_cart_items":"Productos seleccionados en cada carrito.", "tb_orders":"Órdenes creadas a partir de los carritos.",
+ "tbd_order_items":"Productos y precios conservados en cada orden.", "tb_payment_methods":"Formas en que la tienda recibe el pago.",
+ "tbc_payment_methods_types":"Tipos de instrumento que puede registrar un cliente.", "tbd_user_payment_methods":"Instrumentos de pago registrados por los clientes.",
+ "tb_payments":"Pagos o mensualidades de una orden.", "tb_payment_transaction":"Movimientos procesados por el banco o proveedor de pago.",
+ "tb_refunds":"Devoluciones de dinero ligadas a un pago.", "tb_shipments":"Envíos y reenvíos de las órdenes.",
+ "tb_returns":"Reclamaciones o devoluciones de productos.", "tbd_return_items":"Productos incluidos en una reclamación.",
+ "tb_order_cancellations":"Cancelaciones totales o parciales de órdenes.", "tbd_cancellation_items":"Productos y cantidades incluidos en una cancelación.",
+ "tb_logs":"Bitácora automática de altas, cambios y bajas en las demás tablas."}
 
 
 def uncomment_mysql(sql: str) -> str:
@@ -94,27 +123,24 @@ def extract_objects(sql: str) -> tuple[dict[str, str], list[dict[str, str]]]:
         tables[match.group(1)] = clean[match.start():tail_end + 1]
 
     inserts = []
-    # Statements may span lines and use optional explicit column lists.
-    for match in re.finditer(
-        r"\bINSERT\s+(?:IGNORE\s+)?INTO\s+`?([^`\s(]+)`?\s*(\([^;]*?\))?\s*VALUES\s*",
-        clean, re.I,
-    ):
-        pos = match.end()
-        tuples = 0
-        while pos < len(clean):
-            while pos < len(clean) and clean[pos].isspace():
-                pos += 1
-            if pos >= len(clean) or clean[pos] != "(":
+    # Count only mysqldump's table-data sections. INSERTs inside triggers,
+    # procedures, or comments are definitions and must never affect row totals.
+    for section in re.finditer(r"--\s*Dumping data for table\s+`([^`]+)`", clean, re.I):
+        end = re.search(r"\bUNLOCK\s+TABLES\s*;", clean[section.end():], re.I)
+        if not end:
+            continue
+        body = clean[section.end():section.end() + end.start()]
+        for match in re.finditer(r"\bINSERT\s+(?:IGNORE\s+)?INTO\s+`?([^`\s(]+)`?\s*(?:\([^;]*?\))?\s*VALUES\s*", body, re.I):
+            pos, tuples = match.end(), 0
+            while pos < len(body):
+                while pos < len(body) and body[pos].isspace(): pos += 1
+                if pos >= len(body) or body[pos] != "(": break
+                pos = matching_paren(body, pos) + 1
+                tuples += 1
+                while pos < len(body) and body[pos].isspace(): pos += 1
+                if pos < len(body) and body[pos] == ",": pos += 1; continue
                 break
-            pos = matching_paren(clean, pos) + 1
-            tuples += 1
-            while pos < len(clean) and clean[pos].isspace():
-                pos += 1
-            if pos < len(clean) and clean[pos] == ",":
-                pos += 1
-                continue
-            break
-        inserts.append({"table": match.group(1), "rows": tuples})
+            inserts.append({"table": match.group(1), "rows": tuples})
     return tables, inserts
 
 
@@ -124,7 +150,7 @@ def parse_table(name: str, ddl: str) -> dict[str, Any]:
         raise ValueError(f"No se pudo interpretar CREATE TABLE {name}")
     definitions = split_top_level(m.group(1))
     columns, primary_keys, foreign_keys = [], [], []
-    unique_keys, indexes = [], []
+    unique_keys, indexes, checks = [], [], []
     for definition in definitions:
         col_match = re.match(r"\s*`([^`]+)`\s+(.+)$", definition, re.S)
         if col_match:
@@ -152,6 +178,7 @@ def parse_table(name: str, ddl: str) -> dict[str, Any]:
         fk = re.search(r"(?:CONSTRAINT\s+`([^`]+)`\s+)?FOREIGN\s+KEY\s*\((.*?)\)\s*REFERENCES\s+`([^`]+)`\s*\((.*?)\)(.*)", definition, re.I | re.S)
         uk = re.match(r"\s*(?:CONSTRAINT\s+`([^`]+)`\s+)?UNIQUE(?:\s+KEY|\s+INDEX)?\s*`?([^` (]*)`?\s*\((.*?)\)", definition, re.I | re.S)
         idx = re.match(r"\s*(?:KEY|INDEX)\s+`([^`]+)`\s*\((.*?)\)", definition, re.I | re.S)
+        check = re.search(r"(?:CONSTRAINT\s+`([^`]+)`\s+)?CHECK\s*\((.*)\)\s*$", definition, re.I | re.S)
         names = lambda s: re.findall(r"`([^`]+)`", s)
         if pk:
             primary_keys.extend(names(pk.group(1)))
@@ -164,6 +191,8 @@ def parse_table(name: str, ddl: str) -> dict[str, Any]:
             unique_keys.append({"name": uk.group(2), "columns": names(uk.group(3))})
         elif idx:
             indexes.append({"name": idx.group(1), "columns": names(idx.group(2))})
+        elif check:
+            checks.append({"name": check.group(1) or "", "expression": check.group(2)})
     for col in columns:
         if col["name"] in primary_keys:
             col["key"] = "PK"
@@ -175,7 +204,7 @@ def parse_table(name: str, ddl: str) -> dict[str, Any]:
     tail = m.group(2)
     engine = re.search(r"\bENGINE\s*=\s*(\w+)", tail, re.I)
     return {"name": name, "description": describe_table(name), "row_count": 0, "columns": columns, "primary_key": primary_keys,
-            "foreign_keys": foreign_keys, "unique_keys": unique_keys, "indexes": indexes,
+            "foreign_keys": foreign_keys, "unique_keys": unique_keys, "indexes": indexes, "checks": checks,
             "engine": engine.group(1) if engine else "—"}
 
 
@@ -211,12 +240,58 @@ def humanize_identifier(identifier: str) -> str:
 
 
 def describe_table(name: str) -> str:
+    if name in TABLE_DESCRIPTIONS:
+        return TABLE_DESCRIPTIONS[name]
     subject = humanize_identifier(name)
     return f"Almacena la información de {subject}, incluyendo los datos asociados que permiten gestionarlos dentro del sistema."
 
 
 def describe_column(table_name: str, column_name: str, sql_type: str, key: str) -> str:
     name = column_name.lower()
+    specific = {
+      "status":"Indica si el registro sigue activo (1) o fue dado de baja (0); no se borra.",
+      "creation_date":"Fecha en que se creó el registro.", "last_update":"Fecha del último cambio; vacío significa que nunca se ha modificado.",
+      "password":"Contraseña cifrada de la cuenta; nunca contiene ni muestra la contraseña real.",
+      "address_label":"Nombre que el cliente asignó al domicilio, como Casa u Oficina.",
+      "is_default":"Indica si este es el domicilio principal del cliente.",
+      "sup_id_category":"Categoría superior de esta subcategoría.",
+      "type_ownership":"Indica si quien ofrece el producto es dueño, revendedor o distribuidor.",
+      "provider_method_ref":"Referencia simulada y sensible del instrumento de pago; no se muestran sus valores.",
+      "balance":"Saldo disponible del cupón, expresado en pesos mexicanos.",
+      "product_offer_id":"Producto asociado a este renglón.", "converted_at":"Fecha en que el carrito se convirtió en una orden.",
+      "active_user_id":"Usuario del carrito mientras está activo; ayuda a permitir un solo carrito activo por persona.",
+      "cart_status":"Indica si el carrito está en uso, convertido en orden o abandonado.",
+      "status_string":"Etapa actual de la orden: registrada, pagada, en preparación, enviada, entregada, cancelada o devuelta.",
+      "total_products":"Cantidad de piezas activas incluidas en la orden.", "total_cost":"Costo total de los artículos activos de la orden, en pesos mexicanos.",
+      "unit_price":"Precio por pieza guardado al momento de la compra, en pesos mexicanos.",
+      "subtotal":"Importe calculado multiplicando la cantidad por el precio por pieza.",
+      "seller_id":"Usuario proveedor que vende este artículo.",
+      "item_status":"Indica si el renglón sigue vigente o fue cancelado; se conserva como historial.",
+      "canceled_at":"Fecha en que se canceló este renglón de la orden.",
+      "installment_number":"Número de esta mensualidad dentro del plan de pagos.", "installments_total":"Cantidad total de mensualidades del plan.",
+      "payment_status":"Indica si el pago está pendiente, aprobado, rechazado o reembolsado.",
+      "payment_method_id":"Forma en que la tienda cobró, como tarjeta, SPEI, efectivo o cupón.",
+      "user_payment_method_id":"Instrumento del cliente usado para cubrir el pago.",
+      "transaction_type":"Clase de movimiento enviado al banco, como cargo o reembolso.",
+      "transaction_status":"Resultado que informó el banco o procesador.",
+      "idempotency_key":"Identificador que evita procesar dos veces la misma operación.",
+      "provider_transaction_id":"Folio asignado por el banco; en SPEI puede ser la clave de rastreo.",
+      "shipment_type":"Indica si es el envío original o un reenvío por una reclamación.",
+      "shipment_status":"Etapa actual del envío, desde la creación de la guía hasta su entrega o recogida.",
+      "delivery_attempts":"Cantidad de intentos para entregar el paquete.",
+      "resolution_type":"Indica si la reclamación se resuelve con reembolso o reenvío.",
+      "cancellation_scope":"Indica si se cancela toda la orden o solo algunos productos.",
+      "record_id":"Identificador del registro afectado por la operación registrada.",
+      "table_name":"Nombre de la tabla donde ocurrió la operación.", "operation":"Indica si se creó, cambió o dio de baja el registro.",
+      "old_values":"Valores anteriores a un cambio, guardados como bitácora.", "new_values":"Valores posteriores al cambio, guardados como bitácora.",
+      "operation_status":"Indica si la operación quedó registrada correctamente (1).",
+      "db_user":"Cuenta de base de datos que realizó la operación.", "db_role":"Roles que tenía esa cuenta al realizar la operación.",
+      "address_sup_id":"Parte de domicilio de nivel superior a este componente.", "component_type":"Tipo de parte del domicilio, como estado, colonia, calle o código postal.",
+      "birth_date":"Fecha de nacimiento de la persona.", "tracking_number":"Número de guía con el que la paquetería rastrea el envío.",
+      "reason_code":"Clave que indica el motivo de la cancelación.", "item_condition":"Estado en que llegó el producto reclamado.",
+    }
+    if name in specific:
+        return specific[name]
     subject = humanize_identifier(column_name)
     table_subject = humanize_identifier(table_name)
     if "PK" in key:
@@ -246,7 +321,21 @@ def describe_column(table_name: str, column_name: str, sql_type: str, key: str) 
         return f"Fecha u hora relevante para {table_subject}."
     if "FK" in key:
         return f"Campo de relación entre {table_subject} y otra entidad."
-    return f"Dato de {subject} utilizado para describir o gestionar {table_subject} (tipo SQL: {sql_type})."
+    if "FK" in key:
+        return f"Vincula este dato con el registro relacionado en {key.split('→')[-1].strip()}."
+    if name.endswith("_id") or name == "id":
+        return f"Identificador del registro relacionado con {table_subject}."
+    if "date" in name or name.endswith("_at") or "time" in name:
+        return f"Fecha u hora relacionada con {table_subject}."
+    if any(word in name for word in ("price", "cost", "amount", "total", "balance", "fee")):
+        return f"Importe monetario relacionado con {table_subject}, en pesos mexicanos."
+    if any(word in name for word in ("quantity", "count", "attempts", "number")):
+        return f"Cantidad relacionada con {table_subject}."
+    if "name" in name or "title" in name:
+        return f"Nombre legible relacionado con {table_subject}."
+    if "description" in name or "message" in name or "comment" in name:
+        return f"Texto que explica o describe {table_subject}."
+    return f"Dato que describe {subject} de {table_subject}."
 
 
 def scan_routines(sql: str) -> tuple[list[dict[str, str]], list[dict[str, str]], list[dict[str, str]], list[dict[str, str]]]:
@@ -328,6 +417,20 @@ def write_excel(data: dict[str, Any]) -> None:
                 row[7].font = Font(color="FBBF24", bold=True)
             elif "FK" in key:
                 row[7].font = Font(color="38BDF8", bold=True)
+    reports = {
+      "Relaciones": (["Tabla origen", "Campos", "Tabla destino", "Campos destino", "Nombre"],
+        [[t["name"], ", ".join(f["columns"]), f["table"], ", ".join(f["references"]), f["name"]] for t in data["tables"] for f in t["foreign_keys"]]),
+      "Vistas": (["Familia", "Vista", "Descripción"], [[v["family"], v["name"], v["description"]] for v in data["views"]]),
+      "Triggers": (["Tabla", "Trigger", "Acción", "Descripción"], [[t, x["name"], x["name"].rsplit("_", 1)[-1], "Registra altas, cambios (solo campos modificados) o bajas en tb_logs."] for t in (t["name"] for t in data["tables"] if t["name"] != "tb_logs") for x in data["triggers"] if x["name"].startswith("trg_"+t+"_")]),
+      "Rutinas": (["Tipo", "Nombre", "Parámetros", "Descripción"], [[x["kind"], x["name"], x["parameters"], x["description"]] for x in data["procedures"]+data["functions"]]),
+      "Restricciones CHECK": (["Tabla", "Nombre", "Regla"], [[x["table"], x["name"], x["description"]] for x in data["checks"]])}
+    for name, (headers, rows) in reports.items():
+        sh = wb.create_sheet(name)
+        sh.append(headers)
+        for row in rows: sh.append(row)
+        style_sheet(sh, 1)
+        sh.freeze_panes = "A2"
+        sh.auto_filter.ref = f"A1:{get_column_letter(len(headers))}{max(1, sh.max_row)}"
     OUT.mkdir(parents=True, exist_ok=True)
     wb.save(OUT / "diccionario_datos.xlsx")
 
@@ -348,6 +451,13 @@ def write_excel_stdlib(data: dict[str, Any]) -> None:
                 ["#", "Nombre", "Tipo", "Longitud", "NULL", "Default", "Extras", "Llave", "Descripción"]]
         rows += [[c[k] for k in ("position", "name", "type", "length", "nullable", "default", "extras", "key", "description")] for c in table["columns"]]
         sheets.append((safe_sheet_name(table["name"]), rows))
+    reports = {
+      "Relaciones": [["Tabla origen", "Campos", "Tabla destino", "Campos destino", "Nombre"]] + [[t["name"], ", ".join(f["columns"]), f["table"], ", ".join(f["references"]), f["name"]] for t in data["tables"] for f in t["foreign_keys"]],
+      "Vistas": [["Familia", "Vista", "Descripción"]] + [[v["family"],v["name"],v["description"]] for v in data["views"]],
+      "Triggers": [["Tabla","Trigger","Acción","Descripción"]] + [[t,x["name"],x["name"].rsplit("_",1)[-1],"Registra altas, cambios (solo campos modificados) o bajas en tb_logs."] for t in (t["name"] for t in data["tables"] if t["name"] != "tb_logs") for x in data["triggers"] if x["name"].startswith("trg_"+t+"_")],
+      "Rutinas": [["Tipo","Nombre","Parámetros","Descripción"]] + [[x["kind"],x["name"],x["parameters"],x["description"]] for x in data["procedures"]+data["functions"]],
+      "Restricciones CHECK": [["Tabla","Nombre","Regla"]] + [[x["table"],x["name"],x["description"]] for x in data["checks"]]}
+    sheets.extend(reports.items())
 
     def colname(n: int) -> str:
         result = ""
@@ -410,6 +520,42 @@ def quote_dbml(sql_type: str) -> str:
     return sql_type if re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\([^\n]*\))?(?:\s+(?:unsigned|zerofill))?", sql_type, re.I) else f'"{sql_type.replace(chr(34), chr(39))}"'
 
 
+def routine_description(name: str) -> str:
+    descriptions = {
+      "sp_create_order":"Convierte el carrito de un cliente en una orden y conserva sus productos y domicilio de envío.",
+      "sp_insert_person":"Registra los datos personales asociados a una cuenta.",
+      "sp_insert_user":"Crea una cuenta de cliente con sus datos de acceso.",
+      "sp_register_user_with_person":"Registra en una operación la cuenta del cliente y sus datos personales.",
+      "sp_restore_product":"Reactiva un producto dado de baja.",
+      "sp_soft_delete_product":"Da de baja un producto sin borrar su historial.",
+      "sp_soft_delete_user":"Da de baja una cuenta sin borrar sus datos históricos.",
+      "fn_default_password_hash":"Devuelve el valor cifrado predeterminado usado en datos de prueba.",
+      "fn_gen_birth_date":"Genera una fecha de nacimiento dentro del rango de edades indicado.",
+      "fn_gen_courtesy_title":"Genera un tratamiento de cortesía según el país y género recibidos.",
+      "fn_gen_datetime_between":"Genera una fecha y hora dentro del intervalo indicado.",
+      "fn_gen_gender":"Genera un valor de género para datos de prueba.",
+      "fn_gen_handle":"Genera un identificador corto a partir del nombre y apellido.",
+      "fn_gen_unique_nick":"Genera un apodo único a partir del nombre y apellido."}
+    return descriptions.get(name, "Rutina auxiliar para las operaciones o los datos de prueba de la tienda.")
+
+
+def check_description(name: str, expression: str) -> str:
+    n = name.lower()
+    if "quantity" in n: return "Exige que la cantidad de productos sea mayor que cero."
+    if "unit_price" in n: return "Evita que el precio por pieza sea negativo."
+    if "amount" in n: return "Exige que el importe del movimiento o reembolso sea mayor que cero."
+    if "installments" in n: return "Exige al menos una mensualidad y que la mensualidad actual esté dentro del total."
+    if "refund" in n and "source" in n: return "Asegura que el reembolso tenga un único origen válido según su motivo."
+    if "pickup" in n: return "Exige punto de recolección y código cuando el paquete se recoge allí."
+    if "replacement" in n: return "Exige devolución asociada para un reenvío y la prohíbe para un envío original."
+    if "shipping_cost" in n: return "Evita que el costo del envío sea negativo."
+    if "latitude" in n: return "Limita la latitud al rango válido del planeta."
+    if "longitude" in n: return "Limita la longitud al rango válido del planeta."
+    if "coordinates" in n: return "Exige que latitud y longitud se capturen juntas o ambas queden vacías."
+    if "balance" in n: return "Permite saldo vacío o un saldo igual o mayor que cero."
+    return "Valida que los datos relacionados respeten la regla indicada por esta restricción."
+
+
 def generate() -> dict[str, Any]:
     if not SOURCE.is_file():
         raise FileNotFoundError(f"No existe el respaldo esperado: {SOURCE}")
@@ -419,6 +565,7 @@ def generate() -> dict[str, Any]:
         raise ValueError("No se encontraron definiciones CREATE TABLE en el respaldo")
     tables = [parse_table(name, ddl) for name, ddl in definitions.items()]
     for table in tables:
+        table["module"] = next((module for module, names in MODULES.items() if table["name"] in names), "Sin módulo")
         for column in table["columns"]:
             column["description"] = describe_column(table["name"], column["name"], column["type"], column["key"])
     counts = Counter()
@@ -427,17 +574,76 @@ def generate() -> dict[str, Any]:
     for table in tables:
         table["row_count"] = counts[table["name"]]
     views, triggers, procedures, functions = scan_routines(raw)
-    metrics = {"tables": len(tables), "records": sum(t["row_count"] for t in tables),
-               "views": len(views), "triggers": len(triggers), "routines": len(procedures) + len(functions)}
+    for routine in procedures + functions:
+        kind = routine["kind"]
+        signature = re.search(rf"\b{kind}\s+`?{re.escape(routine['name'])}`?\s*\((.*?)\)", routine["sql"], re.I | re.S)
+        routine["parameters"] = signature.group(1).strip() if signature else "Sin parámetros"
+        routine["description"] = routine_description(routine["name"])
+    checks = []
+    for table in tables:
+        for check in table["checks"]:
+            check["table"] = table["name"]
+            check["description"] = check_description(check["name"], check["expression"])
+            checks.append(check)
+    if len(checks) != 19:
+        raise ValueError(f"DIFERENCIA checks: esperado 19, obtenido {len(checks)}")
+    for view in views:
+        view["family"] = ("Trazabilidad por tabla" if view["name"].startswith("vw_trazabilidad_tb") or view["name"].startswith("vw_trazabilidad_tbc") or view["name"].startswith("vw_trazabilidad_tbd") else
+                           "Trazabilidad por caso de prueba" if "_caso_" in view["name"] else "Reportes")
+        view["description"] = ("Historial de cambios de una tabla: quién, cuándo, qué registro y qué valores cambiaron." if view["family"] == "Trazabilidad por tabla" else
+                               "Movimientos cronológicos relacionados con el caso de prueba." if view["family"] == "Trazabilidad por caso de prueba" else
+                               {"vw_seguimiento_ordenes":"Recorrido de cada orden por carrito, productos, pagos, envíos y postventa.",
+                                "vw_cuentas_por_cobrar":"Saldo pendiente de cada orden.",
+                                "vw_total_products_by_category":"Cantidad de productos asociados a cada categoría."}.get(view["name"], "Resumen para consultar información de la tienda."))
+    metrics = {"tables": len(tables), "columns": sum(len(t["columns"]) for t in tables),
+               "records": sum(t["row_count"] for t in tables),
+               "foreign_keys": sum(len(t["foreign_keys"]) for t in tables),
+               "views": len(views), "triggers": len(triggers),
+               "procedures": len(procedures), "functions": len(functions),
+               "routines": len(procedures) + len(functions)}
+    discrepancies = []
+    for metric, expected in CONTROL.items():
+        actual = metrics[metric]
+        if actual != expected:
+            discrepancies.append(f"{metric}: esperado {expected}, obtenido {actual}")
+    expected_rows = {
+      "tb_carts":5,"tb_logs":73642,"tb_order_cancellations":2,"tb_orders":5,"tb_payment_methods":5,
+      "tb_payment_transaction":13,"tb_payments":10,"tb_people":10223,"tb_products":15007,"tb_refunds":2,
+      "tb_returns":1,"tb_shipments":5,"tb_user_addresses":5,"tb_users":10235,"tbc_categories":100,
+      "tbc_payment_methods_types":5,"tbd_address_components":37,"tbd_cancellation_items":2,"tbd_cart_items":22,
+      "tbd_order_items":22,"tbd_products_categories":22728,"tbd_products_users_providers":15007,
+      "tbd_return_items":1,"tbd_user_payment_methods":5,"tbd_users_wishlist_products":5}
+    for table in tables:
+        expected = expected_rows.get(table["name"])
+        if expected is None or table["row_count"] != expected:
+            discrepancies.append(f"registros.{table['name']}: esperado {expected}, obtenido {table['row_count']}")
+    if discrepancies:
+        raise ValueError("DIFERENCIAS CON CIFRAS DE CONTROL:\n" + "\n".join(discrepancies))
     result = {"source": str(SOURCE.relative_to(ROOT)).replace("\\", "/"), "metrics": metrics,
               "tables": tables, "views": views, "triggers": triggers,
-              "procedures": procedures, "functions": functions}
+              "procedures": procedures, "functions": functions, "checks": checks}
     OUT.mkdir(parents=True, exist_ok=True)
+    # Remove only known generated artifacts; leave index.html and unrelated user files intact.
+    for obsolete in ("diagrama_er.mmd",):
+        path = OUT / obsolete
+        if path.is_file():
+            path.unlink()
     (OUT / "estructura.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     write_excel(result)
     write_mermaid(result)
     write_dbml(result)
     write_html(result)
+    print("Verificación de cifras de control:")
+    checks = [("tablas", metrics["tables"], CONTROL["tables"]),
+              ("columnas", metrics["columns"], CONTROL["columns"]),
+              ("registros", metrics["records"], CONTROL["records"]),
+              ("relaciones", metrics["foreign_keys"], CONTROL["foreign_keys"]),
+              ("vistas", metrics["views"], CONTROL["views"]), ("triggers", metrics["triggers"], CONTROL["triggers"]),
+              ("procedimientos", metrics["procedures"], CONTROL["procedures"]), ("funciones", metrics["functions"], CONTROL["functions"])]
+    for label, actual, expected in checks:
+        print(f"{label}: {'OK' if actual == expected else 'DIFERENCIA'} ({actual} / {expected})")
+    for name, expected in expected_rows.items():
+        print(f"registros.{name}: {'OK' if counts[name] == expected else 'DIFERENCIA'} ({counts[name]} / {expected})")
     return result
 
 
@@ -469,9 +675,10 @@ def write_html(data: dict[str, Any]) -> None:
 
     cards = "".join(
         f'<article class="metric"><div class="metric-label">{e(label)}</div><div class="metric-value">{e(value)}</div></article>'
-        for label, value in (("Tablas", data["metrics"]["tables"]), ("Registros", f"{data['metrics']['records']:,}"),
+        for label, value in (("Registros", f"{data['metrics']['records']:,}"), ("Tablas", data["metrics"]["tables"]),
+                             ("Columnas", data["metrics"]["columns"]), ("Relaciones", data["metrics"]["foreign_keys"]),
                              ("Vistas", data["metrics"]["views"]), ("Triggers", data["metrics"]["triggers"]),
-                             ("Procedimientos / funciones", data["metrics"]["routines"]))
+                             ("Procedimientos", data["metrics"]["procedures"]), ("Funciones", data["metrics"]["functions"]))
     )
     nav = "".join(f'<a class="nav-item" href="#table-{i}" title="{e(t["name"])}"><span class="nav-dot"></span>{e(t["name"])}</a>' for i, t in enumerate(data["tables"]))
     sections = []
@@ -487,9 +694,10 @@ def write_html(data: dict[str, Any]) -> None:
                 f'<td>{e(c["default"])}</td>', f'<td>{e(c["extras"])}</td>',
                 f'<td><span class="key-badge {key_class}">{e(key)}</span></td>', f'<td class="description">{e(c["description"])}</td>'
             )) + "</tr>")
-        fk_html = "".join(f'<span class="relation-chip">{e(", ".join(fk["columns"]))} <b>→</b> {e(fk["table"])}.{e(", ".join(fk["references"]))}</span>' for fk in table["foreign_keys"])
-        sections.append(f'''<section class="table-card" id="table-{i}" data-table="{e(table["name"]).lower()}">
-          <div class="table-heading"><div><div class="eyebrow">TABLA</div><h2>{e(table["name"])}</h2><p class="table-description">{e(table["description"])}</p></div>
+        fk_html = "".join(f'<a class="relation-chip" href="#table-{next((j for j,t in enumerate(data["tables"]) if t["name"] == fk["table"]), 0)}">{e(", ".join(fk["columns"]))} <b>→</b> {e(fk["table"])}.{e(", ".join(fk["references"]))}</a>' for fk in table["foreign_keys"])
+        search_text = table["name"] + " " + table["description"] + " " + " ".join(c["name"] + " " + c["description"] for c in table["columns"])
+        sections.append(f'''<section class="table-card" id="table-{i}" data-table="{e(table["name"]).lower()}" data-search="{e(search_text).lower()}">
+          <div class="table-heading"><div><div class="eyebrow">{e(table["module"])}</div><h2>{e(table["name"])}</h2><p class="table-description">{e(table["description"])}</p></div>
           <div class="table-stats"><span class="row-count">{table["row_count"]:,}<small> registros</small></span><span class="column-count">{len(table["columns"])} columnas</span><span class="engine">{e(table["engine"])}</span></div></div>
           {f'<div class="relations">{fk_html}</div>' if fk_html else ''}
           <div class="table-scroll"><table><thead><tr><th>#</th><th>Nombre</th><th>Tipo</th><th>Longitud</th><th>NULL</th><th>Default</th><th>Extras</th><th>Llave</th><th>Descripción</th></tr></thead><tbody>{''.join(rows)}</tbody></table></div>
@@ -508,7 +716,7 @@ def write_html(data: dict[str, Any]) -> None:
             badge_class = "pk-key" if is_pk else "fk-key"
             key_badge = f'<span class="field-key {badge_class}">{badge}</span>' if badge else ""
             field_rows.append(f'<div class="erd-field" id="field-{table_i}-{col_i}" data-field="{e(column["name"])}"><span class="field-icon {icon_class}">{icon}</span><span class="field-name">{e(column["name"])}</span><span class="field-type">{e(column["type"])}</span>{key_badge}</div>')
-        graph_cards.append(f'<article class="erd-card" id="entity-{table_i}" data-entity="{e(table["name"])}"><header class="erd-card-head"><span class="entity-icon">▤</span><strong>{e(table["name"])}</strong><span class="entity-count">{len(table["columns"])} cols</span></header><div class="erd-card-body">{"".join(field_rows)}</div><footer class="erd-card-foot">{table["row_count"]:,} registros <span>{e(table["engine"])}</span></footer></article>')
+        graph_cards.append(f'<article class="erd-card module-{table_i}" id="entity-{table_i}" data-entity="{e(table["name"])}" data-module="{e(table["module"])}"><header class="erd-card-head"><span class="entity-icon">▤</span><strong>{e(table["name"])}</strong><span class="entity-count">{table["row_count"]:,} regs</span></header><div class="erd-card-body">{"".join(field_rows)}</div><footer class="erd-card-foot">{len(table["columns"])} campos <span>{e(table["module"])}</span></footer></article>')
         for fk in table["foreign_keys"]:
             target_i = table_index.get(fk["table"])
             if target_i is None:
@@ -520,14 +728,83 @@ def write_html(data: dict[str, Any]) -> None:
                 if source_i is not None and target_col_i is not None:
                     graph_links.append({"from": f"field-{target_i}-{target_col_i}", "to": f"field-{table_i}-{source_i}",
                                         "label": f"{fk['table']}.{target_col} → {table['name']}.{source_col}"})
+    # Use exactly one rendered connector per FK constraint; keep all columns
+    # in metadata so composite constraints can branch from every participating row.
+    graph_links = []
+    for table_i, table in enumerate(data["tables"]):
+        for fk in table["foreign_keys"]:
+            target_i = table_index.get(fk["table"])
+            if target_i is None: continue
+            target_table = data["tables"][target_i]
+            src = [f"field-{table_i}-{next(i for i,c in enumerate(table['columns']) if c['name']==col)}" for col in fk["columns"]]
+            dst = [f"field-{target_i}-{next(i for i,c in enumerate(target_table['columns']) if c['name']==col)}" for col in fk["references"]]
+            graph_links.append({"source":table["name"],"target":fk["table"],"source_fields":src,"target_fields":dst,
+                                "from":src[0],"to":dst[0],"label":f"{table['name']}.{', '.join(fk['columns'])} → {fk['table']}.{', '.join(fk['references'])}"})
     links_json = json_module.dumps(graph_links, ensure_ascii=False).replace("</", "<\\/")
+    # Native SVG model for the interactive ERD: HTML is used only for surrounding controls.
+    svg_width = len(MODULES) * 570 + 60
+    lane_x = {name: 40 + index * 570 for index, name in enumerate(MODULES)}
+    lane_y = Counter()
+    svg_positions = {}
+    for t in data["tables"]:
+        x = lane_x[t["module"]]
+        y = 72 + lane_y[t["module"]] * 44
+        svg_positions[t["name"]] = (x, y)
+        lane_y[t["module"]] += len(t["columns"]) + 4
+    svg_height = max(y + 100 for t in data["tables"] for x, y in [svg_positions[t["name"]]]) + 60
+    svg_parts = []
+    for module, x in lane_x.items():
+        members = [t for t in data["tables"] if t["module"] == module]
+        h = max([svg_positions[t["name"]][1] + 78 + 23*len(t["columns"]) for t in members] + [850])
+        svg_parts.append(f'<rect x="{x-14}" y="18" width="510" height="{h}" rx="14" fill="none" stroke="#27272a"/><text x="{x}" y="48" fill="#a1a1aa" font-size="17" font-family="Arial" font-weight="700">{e(module)}</text>')
+    module_colors = {"Usuarios":"#22d3ee", "Catálogo de productos":"#a78bfa", "Carrito y órdenes":"#34d399", "Pagos":"#fbbf24", "Postventa y envíos":"#fb7185", "Auditoría":"#94a3b8"}
+    for t in data["tables"]:
+        x,y=svg_positions[t["name"]]; w=480; hh=42; rh=23; h=hh+rh*len(t["columns"])+26
+        color=module_colors[t["module"]]
+        svg_parts.append(f'<g class="svg-card" data-table="{e(t["name"])}" data-x="{x}" data-y="{y}" tabindex="0"><rect class="card-bg" x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="#0a0a0a" stroke="#27272a"/><path d="M{x+8} {y}H{x+w-8}Q{x+w} {y} {x+w} {y+8}V{y+hh}H{x}V{y+8}Q{x} {y} {x+8} {y}" fill="{color}"/><text x="{x+12}" y="{y+27}" fill="#000" font-size="14" font-family="monospace" font-weight="700">{e(t["name"])}</text><text x="{x+w-12}" y="{y+25}" text-anchor="end" fill="#111" font-size="11" font-family="monospace">{t["row_count"]:,} regs</text>')
+        for ci,c in enumerate(t["columns"]):
+            cy=y+hh+ci*rh; k="PK" if c["name"] in t["primary_key"] else "FK" if "FK" in c["key"] else "·"; kc="#fbbf24" if k=="PK" else "#22d3ee" if k=="FK" else "#71717a"
+            svg_parts.append(f'<rect x="{x+1}" y="{cy}" width="478" height="{rh}" fill="{"#101010" if ci%2 else "#0a0a0a"}"/><text x="{x+10}" y="{cy+16}" fill="{kc}" font-size="10" font-family="monospace">{k}</text><text x="{x+42}" y="{cy+16}" fill="#e4e4e7" font-size="11" font-family="monospace">{e(c["name"])}</text><text x="{x+w-10}" y="{cy+16}" text-anchor="end" fill="#92929d" font-size="10" font-family="monospace">{e(c["type"])}</text>')
+        svg_parts.append(f'<text x="{x+10}" y="{y+h-7}" fill="#71717a" font-size="9" font-family="monospace">{len(t["columns"])} columnas · {t["row_count"]:,} registros</text></g>')
+    svg_edge_parts=[]
+    for t in data["tables"]:
+        sx,sy=svg_positions[t["name"]]
+        for fk in t["foreign_keys"]:
+            if fk["table"] not in svg_positions: continue
+            tx,ty=svg_positions[fk["table"]]; target=next(z for z in data["tables"] if z["name"]==fk["table"])
+            si=next((i for i,c in enumerate(t["columns"]) if c["name"]==fk["columns"][0]),0); ti=next((i for i,c in enumerate(target["columns"]) if c["name"]==fk["references"][0]),0)
+            y1=sy+42+si*23+11; y2=ty+42+ti*23+11
+            if t["name"]==fk["table"]:
+                path=f'M {sx+480} {y1} H {sx+525} V {y1-18} H {sx+505} V {y2} H {sx+480}'
+            else:
+                mid=(sx+480+tx)//2; path=f'M {sx+480} {y1} H {mid} V {y2} H {tx}'
+            title=e(t["name"]+"."+", ".join(fk["columns"])+" → "+fk["table"]+"."+", ".join(fk["references"]))
+            sis=[i for i,c in enumerate(t["columns"]) if c["name"] in fk["columns"]]
+            tis=[i for i,c in enumerate(target["columns"]) if c["name"] in fk["references"]]
+            mid=(sx+480+tx)//2
+            if t["name"] != fk["table"]:
+                path += ''.join(f' M {sx+480} {sy+42+idx*23+11} H {mid}' for idx in sis[1:])
+                path += ''.join(f' M {mid} {ty+42+idx*23+11} H {tx}' for idx in tis[1:])
+            svg_edge_parts.append(f'<path class="relation-edge" data-source="{e(t["name"])}" data-target="{e(fk["table"])}" data-sidx="{si}" data-tidx="{ti}" data-sidxs="{",".join(map(str,sis))}" data-tidxs="{",".join(map(str,tis))}" d="{path}" fill="none" stroke="#00e5ff" stroke-width="1.6" opacity=".72"><title>{title}</title></path>')
+    svg_content=''.join(svg_edge_parts+svg_parts)
+    if len(svg_edge_parts) != CONTROL_CHECKS:
+        raise ValueError(f"DIFERENCIA en líneas SVG: esperado {CONTROL_CHECKS}, obtenido {len(svg_edge_parts)}")
+    view_sections=[]
+    for family in ("Trazabilidad por tabla","Trazabilidad por caso de prueba","Reportes"):
+        items=[v for v in data["views"] if v["family"]==family]
+        view_sections.append(f'<h3>{e(family)}</h3><div class="info-grid">'+''.join(f'<article class="info-item"><b>{e(v["name"])}</b><p>{e(v["description"])}</p></article>' for v in items)+'</div>')
+    trigger_groups=[]
+    for t in data["tables"]:
+        if t["name"]=="tb_logs": continue
+        names=[x["name"] for x in data["triggers"] if x["name"].startswith("trg_"+t["name"]+"_")]
+        trigger_groups.append(f'<tr><td><code>{e(t["name"])}</code></td><td>{" · ".join(e(n) for n in names)}</td><td>El alta registra todos los valores; el cambio registra solo los campos modificados con sus valores anteriores y nuevos; la baja guarda los valores que tenía el registro.</td></tr>')
+    routine_rows=''.join(f'<tr><td>{e("Procedimiento" if x["kind"]=="procedure" else "Función")}</td><td><code>{e(x["name"])}</code></td><td>{e(x["parameters"])}</td><td>{e(x["description"])}</td></tr>' for x in data["procedures"]+data["functions"])
+    check_rows=''.join(f'<tr><td><code>{e(x["table"])}</code></td><td><code>{e(x["name"])}</code></td><td>{e(x["description"])}</td></tr>' for x in data["checks"])
     html = f'''<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#09090b"><title>Diccionario de datos · {e(data["source"])}</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{{--bg:#09090b;--panel:#111113;--panel2:#18181b;--line:#27272a;--text:#f4f4f5;--muted:#a1a1aa;--subtle:#71717a;--amber:#fbbf24;--blue:#38bdf8;--green:#4ade80}}
+:root{{--bg:#000000;--panel:#0a0a0a;--panel2:#121212;--line:#27272a;--text:#f4f4f5;--muted:#a1a1aa;--subtle:#71717a;--amber:#fbbf24;--blue:#38bdf8;--green:#4ade80}}
 *{{box-sizing:border-box}}html{{scroll-behavior:smooth;scroll-padding-top:90px}}body{{margin:0;background:var(--bg);color:var(--text);font-family:Manrope,system-ui,sans-serif;font-size:14px;line-height:1.55}}
 a{{color:inherit;text-decoration:none}}button,input{{font:inherit}}.topbar{{height:64px;position:sticky;top:0;z-index:5;background:rgba(9,9,11,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 28px}}
 .brand{{display:flex;gap:11px;align-items:center;font-weight:800;letter-spacing:-.03em}}.brand-mark{{width:28px;height:28px;border-radius:8px;background:#f4f4f5;color:#09090b;display:grid;place-items:center;font-size:15px;font-weight:900}}.brand small{{display:block;color:var(--muted);font:10px 'DM Mono',monospace;letter-spacing:.08em}}
@@ -538,25 +815,35 @@ main{{padding:44px clamp(20px,4vw,64px) 80px;min-width:0}}.hero{{display:flex;al
 .table-description{{color:var(--muted);font-size:11px;margin:6px 0 0;max-width:720px}}.diagram-card{{border:1px solid var(--line);background:#050506;border-radius:10px;padding:22px;margin:14px 0 40px;overflow:hidden;position:relative}}.diagram-card.fullscreen{{position:fixed;inset:0;z-index:20;margin:0;border-radius:0;padding:22px 26px;display:flex;flex-direction:column;background:#050506}}.diagram-card h2{{font-size:20px;letter-spacing:-.04em;margin:0 0 4px}}.diagram-card p{{font-size:12px;color:var(--muted);margin:0 0 15px}}.diagram-tools{{position:absolute;right:20px;top:24px;display:flex;gap:8px;z-index:4}}.diagram-tools button{{background:#202023;border:1px solid #3f3f46;color:#e4e4e7;border-radius:6px;padding:7px 10px;cursor:pointer;font-size:11px}}.diagram-tools button:hover{{background:#303036}}#graph-viewport{{position:relative;width:100%;height:100vh;min-height:650px;overflow:hidden;background-color:#050506;background-image:radial-gradient(#202023 1px,transparent 1px);background-size:24px 24px;border:1px solid #202023;border-radius:8px;cursor:grab;touch-action:none}}#graph-viewport.is-panning{{cursor:grabbing}}.diagram-card.fullscreen #graph-viewport{{flex:1;height:auto;min-height:0;margin-top:8px;border-radius:0}}#graph-stage{{position:absolute;left:0;top:0;width:3200px;height:3200px;transform-origin:0 0}}#graph-lines{{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}}.fk-link{{fill:none;stroke:#00f3ff;stroke-width:1.7;opacity:.64;marker-end:url(#fk-arrow);stroke-dasharray:8 9;animation:flow 2.6s linear infinite;filter:drop-shadow(0 0 3px rgba(0,243,255,.55))}}@keyframes flow{{to{{stroke-dashoffset:-34}}}}.erd-card{{position:absolute;left:0;top:0;width:340px;background:#111;border:1px solid #34343a;border-radius:8px;overflow:hidden;box-shadow:0 14px 35px rgba(0,0,0,.5);user-select:none;z-index:1}}.erd-card.is-dragging{{z-index:3;border-color:#00f3ff;box-shadow:0 16px 42px rgba(0,243,255,.13)}}.erd-card-head{{height:42px;background:linear-gradient(100deg,#242428,#171719);border-bottom:1px solid #3a3a40;display:flex;align-items:center;gap:9px;padding:0 12px;cursor:grab}}.erd-card-head:active{{cursor:grabbing}}.entity-icon{{font-size:14px;color:#00f3ff}}.erd-card-head strong{{font:600 12px 'DM Mono',monospace;color:#fafafa;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}}.entity-count{{font:9px 'DM Mono',monospace;color:#8b8b95;background:#101012;border:1px solid #333338;border-radius:4px;padding:2px 5px;white-space:nowrap}}.erd-card-body{{padding:4px 0;overflow:visible}}.erd-field{{height:28px;display:flex;align-items:center;gap:7px;padding:0 9px;border-bottom:1px solid #1d1d20;white-space:nowrap}}.erd-field:last-child{{border-bottom:0}}.field-icon{{width:15px;text-align:center;flex:none;font-size:11px}}.pk-icon{{color:#fbbf24}}.fk-icon{{color:#22d3ee}}.plain-icon{{color:#52525b}}.field-name{{font:10px 'DM Mono',monospace;color:#e4e4e7;overflow:hidden;text-overflow:ellipsis;flex:1}}.field-type{{font:9px 'DM Mono',monospace;color:#92929d;max-width:100px;overflow:hidden;text-overflow:ellipsis}}.field-key{{font:8px 'DM Mono',monospace;border-radius:3px;padding:1px 4px}}.pk-key{{color:#fbbf24;background:#29200c}}.fk-key{{color:#67e8f9;background:#0c2029}}.erd-card-foot{{border-top:1px solid #2b2b30;padding:6px 10px;color:#777780;font:9px 'DM Mono',monospace;display:flex;justify-content:space-between}}.erd-card-foot span{{color:#595961}}.diagram-legend{{position:absolute;bottom:16px;left:16px;z-index:4;color:#a1a1aa;background:rgba(9,9,11,.92);border:1px solid #27272a;border-radius:6px;padding:8px 10px;font:10px 'DM Mono',monospace;pointer-events:none}}.diagram-legend b{{color:#00f3ff}}.footer{{border-top:1px solid var(--line);padding-top:18px;color:var(--subtle);font:10px 'DM Mono',monospace}}
 @media(max-width:950px){{.layout{{grid-template-columns:190px minmax(0,1fr)}}.metrics{{grid-template-columns:repeat(3,1fr)}}.source-chip{{display:none}}}}
 @media(max-width:650px){{.topbar{{padding:0 16px}}.top-meta{{display:none}}.layout{{display:block}}.sidebar{{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px;display:flex;gap:4px;overflow:auto}}.side-label{{display:none}}.nav-item{{background:var(--panel);border:1px solid var(--line)}}main{{padding:28px 14px 55px}}.hero{{display:block}}.metrics{{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:35px}}.metric{{padding:13px;min-height:90px}}.metric-value{{font-size:25px}}.section-head{{align-items:stretch;flex-direction:column}}.search{{width:100%}}.table-heading{{align-items:flex-start;flex-direction:column}}.table-stats{{flex-wrap:wrap}}}}
+.final-section{{background:#0a0a0a;border:1px solid #27272a;border-radius:10px;padding:22px;margin:20px 0}}.final-section h2{{margin:4px 0 18px}}.final-section h3{{color:#e4e4e7;margin:20px 0 8px}}.info-grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px}}.info-item{{background:#121212;border:1px solid #27272a;border-radius:7px;padding:10px}}.info-item b{{font:11px monospace;color:#e4e4e7}}.info-item p{{margin:5px 0 0;color:#a1a1aa;font-size:12px}}.erd-card{{width:360px}}.erd-card-head{{background:linear-gradient(100deg,#16282c,#111719);border-bottom-color:#164e63}}.entity-count{{color:#a5f3fc;border-color:#164e63;background:#082027}}#svg-relational-diagram{{display:none}}#diagram-jump{{max-width:230px;background:#101012;color:#e4e4e7;border:1px solid #3f3f46;border-radius:6px;padding:7px 9px}}
 </style></head><body>
 <header class="topbar"><a class="brand" href="#top"><span class="brand-mark">D</span><span>DATA / ATLAS<small>RELATIONAL SCHEMA BROWSER</small></span></a><div class="top-meta">MYSQL · DOCUMENTACIÓN TÉCNICA</div></header>
-<div class="layout"><aside class="sidebar"><div class="side-label">Esquema · {len(data['tables'])} tablas</div>{nav}<a class="nav-item" href="#relational-diagram"><span class="nav-dot"></span>Diagrama relacional</a></aside>
+<div class="layout"><aside class="sidebar"><div class="side-label">Esquema · {len(data['tables'])} tablas</div>{nav}<a class="nav-item" href="#relational-diagram"><span class="nav-dot"></span>Diagrama relacional</a><a class="nav-item" href="#views">Vistas</a><a class="nav-item" href="#triggers">Triggers</a><a class="nav-item" href="#routines">Rutinas</a><a class="nav-item" href="#checks">Restricciones CHECK</a></aside>
 <main id="top"><section class="hero"><div><div class="eyebrow">INVENTARIO DE BASE DE DATOS</div><h1>Diccionario de datos</h1><p>Vista técnica del esquema, sus relaciones y volumen de datos.</p></div><div class="source-chip">SOURCE&nbsp; / &nbsp;{e(data['source'])}</div></section>
 <section class="metrics" aria-label="Métricas globales">{cards}</section>
 <div class="section-head"><div><div class="eyebrow">CATÁLOGO</div><h2>Tablas y columnas</h2></div><input id="search" class="search" type="search" placeholder="Filtrar tablas por nombre…" aria-label="Filtrar tablas"></div>
 {''.join(sections)}
+<section class="final-section" id="views"><div class="eyebrow">CONSULTAS PREPARADAS</div><h2>Vistas · 32</h2>{''.join(view_sections)}</section>
+<section class="final-section" id="triggers"><div class="eyebrow">BITÁCORA AUTOMÁTICA</div><h2>Triggers · 72</h2><div class="table-scroll"><table><thead><tr><th>Tabla</th><th>Triggers</th><th>Qué registran en tb_logs</th></tr></thead><tbody>{''.join(trigger_groups)}</tbody></table></div></section>
+<section class="final-section" id="routines"><div class="eyebrow">OPERACIONES AUXILIARES</div><h2>Procedimientos y funciones · 14</h2><div class="table-scroll"><table><thead><tr><th>Tipo</th><th>Nombre</th><th>Parámetros</th><th>Qué hace</th></tr></thead><tbody>{routine_rows}</tbody></table></div></section>
+<section class="final-section" id="checks"><div class="eyebrow">REGLAS DE INTEGRIDAD</div><h2>Restricciones CHECK · 19</h2><div class="table-scroll"><table><thead><tr><th>Tabla</th><th>Restricción</th><th>Regla en palabras sencillas</th></tr></thead><tbody>{check_rows}</tbody></table></div></section>
 <section class="diagram-card" id="relational-diagram"><div class="eyebrow">MAPA DEL ESQUEMA</div><h2>Diagrama entidad–relación</h2><p>Arrastra las cabeceras para mover tablas; rueda para zoom y arrastra el fondo para navegar. Las conexiones unen directamente la columna PK con su campo FK.</p><div class="diagram-tools"><button type="button" id="zoom-in" title="Acercar">＋ Zoom</button><button type="button" id="zoom-out" title="Alejar">－ Zoom</button><button type="button" id="zoom-reset" title="Ajustar grafo">⟲ Ajustar</button><button type="button" id="fullscreen" title="Alternar pantalla completa">⛶ Pantalla completa</button></div><div id="graph-viewport"><div id="graph-stage"><svg id="graph-lines" aria-hidden="true"><defs><marker id="fk-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#00f3ff"/></marker></defs></svg><div id="graph-cards">{''.join(graph_cards)}</div></div><div class="diagram-legend"><b>━━➤</b> PK → FK · <span style="color:#fbbf24">🔑 PK</span> · <span style="color:#22d3ee">↗ FK</span></div></div></section>
+<section class="diagram-card" id="svg-relational-diagram"><div class="eyebrow">DIAGRAMA SVG NATIVO · 42 RELACIONES</div><div class="diagram-tools"><button id="native-in">+ Zoom</button><button id="native-out">− Zoom</button><button id="native-fit">Ajustar</button><button id="svg-export">Exportar SVG</button><button id="png-export">Exportar PNG</button></div><div id="native-viewport"><svg id="native-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {svg_width} {svg_height}"><g id="native-world">{svg_content}</g></svg></div></section>
 <footer class="footer">GENERADO DESDE {e(data['source'])} · CONTEOS BASADOS EN INSERTS DEL DUMP</footer></main></div>
 <!-- Grafo ER nativo: tarjetas HTML y conectores SVG para enlazar columnas exactas. -->
 <script>
 const graphLinks={links_json};const viewport=document.getElementById('graph-viewport');const stage=document.getElementById('graph-stage');const svg=document.getElementById('graph-lines');let scale=1,panX=0,panY=0;
 function applyTransform(){{stage.style.transform=`translate(${{panX}}px,${{panY}}px) scale(${{scale}})`;}}
-function layoutCards(){{const cards=[...document.querySelectorAll('.erd-card')],columns=5,gapX=150,gapY=105,margin=120;let y=margin;for(let start=0;start<cards.length;start+=columns){{const row=cards.slice(start,start+columns);let h=0;row.forEach((card,index)=>{{card.style.left=`${{margin+index*(340+gapX)}}px`;card.style.top=`${{y}}px`;h=Math.max(h,card.offsetHeight);}});y+=h+gapY;}}const w=margin*2+columns*(340+gapX),h=y+margin;stage.style.width=`${{w}}px`;stage.style.height=`${{h}}px`;svg.setAttribute('viewBox',`0 0 ${{w}} ${{h}}`);drawLinks();fitGraph();}}
-function drawLinks(){{svg.querySelectorAll('.fk-link').forEach(p=>p.remove());for(const l of graphLinks){{const from=document.getElementById(l.from),to=document.getElementById(l.to);if(!from||!to)continue;const a=from.getBoundingClientRect(),b=to.getBoundingClientRect(),s=stage.getBoundingClientRect(),x1=(a.right-s.left)/scale,y1=(a.top+a.height/2-s.top)/scale,x2=(b.left-s.left)/scale,y2=(b.top+b.height/2-s.top)/scale,dx=Math.max(70,Math.abs(x2-x1)*.48),p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','fk-link');p.setAttribute('d',`M ${{x1}} ${{y1}} C ${{x1+dx}} ${{y1}}, ${{x2-dx}} ${{y2}}, ${{x2}} ${{y2}}`);p.setAttribute('marker-end','url(#fk-arrow)');p.setAttribute('aria-label',l.label);svg.appendChild(p);}}}}
+function layoutCards(){{const cards=[...document.querySelectorAll('.erd-card')],modules=[...new Set(cards.map(c=>c.dataset.module))],xGap=480,margin=70;let maxY=0;svg.querySelectorAll('.module-lane').forEach(n=>n.remove());modules.forEach((m,mi)=>{{let y=105;const lane=cards.filter(c=>c.dataset.module===m);lane.forEach(card=>{{card.style.left=`${{margin+mi*xGap}}px`;card.style.top=`${{y}}px`;y+=card.offsetHeight+55;}});const h=y+10;maxY=Math.max(maxY,h);const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');bg.setAttribute('class','module-lane');bg.setAttribute('x',margin+mi*xGap-16);bg.setAttribute('y',18);bg.setAttribute('width',440);bg.setAttribute('height',h);bg.setAttribute('rx',12);bg.setAttribute('fill','#07090b');bg.setAttribute('stroke','#27272a');svg.appendChild(bg);const label=document.createElementNS('http://www.w3.org/2000/svg','text');label.setAttribute('class','module-lane');label.setAttribute('x',margin+mi*xGap);label.setAttribute('y',48);label.setAttribute('fill','#a1a1aa');label.setAttribute('font-size','15');label.setAttribute('font-family','monospace');label.textContent=m;svg.appendChild(label);}});const w=margin*2+modules.length*xGap,h=maxY+45;stage.style.width=`${{w}}px`;stage.style.height=`${{h}}px`;svg.setAttribute('viewBox',`0 0 ${{w}} ${{h}}`);drawLinks();fitGraph();}}
+function drawLinks(){{svg.querySelectorAll('.fk-link').forEach(p=>p.remove());const rect=(id)=>document.getElementById(id)?.getBoundingClientRect();for(const l of graphLinks){{const src=l.source_fields.map(rect),dst=l.target_fields.map(rect);if(src.some(x=>!x)||dst.some(x=>!x))continue;const s=stage.getBoundingClientRect(),world=(r)=>({{left:(r.left-s.left)/scale,right:(r.right-s.left)/scale,y:(r.top+r.height/2-s.top)/scale}}),ss=src.map(world),tt=dst.map(world),forward=tt[0].left>ss[0].right,sx=forward?ss[0].right:ss[0].left,tx=forward?tt[0].left:tt[0].right,mx=(sx+tx)/2;let d;if(l.source===l.target){{const x=ss[0].right+55;d=`M ${{ss[0].right}} ${{ss[0].y}} H ${{x}} V ${{ss[0].y-22}} H ${{x+18}} V ${{tt[0].y-22}} H ${{x}} V ${{tt[0].y}} H ${{tt[0].right}}`;for(const q of ss.slice(1))d+=` M ${{q.right}} ${{q.y}} H ${{x}}`;for(const q of tt.slice(1))d+=` M ${{x}} ${{q.y}} H ${{q.right}}`;}}else{{d=`M ${{sx}} ${{ss[0].y}} H ${{mx}} V ${{tt[0].y}} H ${{tx}}`;for(const q of ss.slice(1))d+=` M ${{forward?q.right:q.left}} ${{q.y}} H ${{mx}}`;for(const q of tt.slice(1))d+=` M ${{mx}} ${{q.y}} H ${{forward?q.left:q.right}}`;}}const p=document.createElementNS('http://www.w3.org/2000/svg','path');p.setAttribute('class','fk-link');p.setAttribute('d',d);p.dataset.source=l.source;p.dataset.target=l.target;p.setAttribute('marker-end','url(#fk-arrow)');p.setAttribute('aria-label',l.label);p.setAttribute('pointer-events','stroke');p.addEventListener('click',()=>{{highlightEntity(l.target,true);focusEntity(l.target);}});svg.appendChild(p);}}}}
 function fitGraph(){{const w=parseFloat(stage.style.width),h=parseFloat(stage.style.height),vw=viewport.clientWidth,vh=viewport.clientHeight;scale=Math.min((vw-70)/w,(vh-70)/h,1);panX=(vw-w*scale)/2;panY=(vh-h*scale)/2;applyTransform();}}
 document.querySelectorAll('.erd-card').forEach(card=>{{const head=card.querySelector('.erd-card-head');head.addEventListener('pointerdown',ev=>{{if(ev.button!==0)return;ev.preventDefault();ev.stopPropagation();card.classList.add('is-dragging');head.setPointerCapture(ev.pointerId);const sx=ev.clientX,sy=ev.clientY,l=card.offsetLeft,t=card.offsetTop;function move(e){{card.style.left=`${{l+(e.clientX-sx)/scale}}px`;card.style.top=`${{t+(e.clientY-sy)/scale}}px`;drawLinks();}}function end(){{card.classList.remove('is-dragging');head.removeEventListener('pointermove',move);head.removeEventListener('pointerup',end);head.removeEventListener('pointercancel',end);}}head.addEventListener('pointermove',move);head.addEventListener('pointerup',end);head.addEventListener('pointercancel',end);}});}});
+function focusEntity(name){{const card=document.querySelector(`.erd-card[data-entity="${{CSS.escape(name)}}"]`);if(!card)return;const rect=card.getBoundingClientRect(),v=viewport.getBoundingClientRect();panX+=v.left+v.width/2-(rect.left+rect.width/2);panY+=v.top+v.height/2-(rect.top+rect.height/2);applyTransform();}}
+function highlightEntity(name,sticky=false){{if(!sticky&&highlightEntity.locked)return;if(sticky)highlightEntity.locked=name;document.querySelectorAll('.fk-link').forEach(p=>{{const on=p.dataset.source===name||p.dataset.target===name;p.style.opacity=on?'1':'.08';p.style.stroke=on?'#00f3ff':'#4b5563';p.style.filter=on?'drop-shadow(0 0 5px #00e5ff)':'';}});document.querySelectorAll('.erd-card').forEach(c=>{{const on=c.dataset.entity===name||graphLinks.some(l=>(l.source===name&&l.target===c.dataset.entity)||(l.target===name&&l.source===c.dataset.entity));c.style.opacity=on?'1':'.45';c.style.borderColor=c.dataset.entity===name?'#00f3ff':on?'#14515a':'#27272a';}});}}
+document.querySelectorAll('.erd-card').forEach(card=>{{card.addEventListener('pointerenter',()=>highlightEntity(card.dataset.entity));card.addEventListener('pointerleave',()=>{{if(!highlightEntity.locked){{document.querySelectorAll('.fk-link').forEach(p=>{{p.style.opacity='.64';p.style.stroke='#00f3ff';p.style.filter='';}});document.querySelectorAll('.erd-card').forEach(c=>{{c.style.opacity='1';c.style.borderColor='#34343a';}});}}}});card.addEventListener('click',()=>highlightEntity(card.dataset.entity,true));}});
+const quick=document.createElement('select');quick.id='diagram-jump';quick.setAttribute('aria-label','Saltar a tabla');quick.innerHTML='<option value="">Saltar a tabla…</option>'+[...document.querySelectorAll('.erd-card')].map(c=>`<option value="${{c.dataset.entity}}">${{c.dataset.module}} · ${{c.dataset.entity}}</option>`).join('');document.querySelector('.diagram-tools').appendChild(quick);quick.addEventListener('change',()=>{{if(quick.value){{focusEntity(quick.value);highlightEntity(quick.value,true);}}}});
 let panning=false,lx=0,ly=0;viewport.addEventListener('pointerdown',e=>{{if(e.target.closest('.erd-card'))return;panning=true;lx=e.clientX;ly=e.clientY;viewport.classList.add('is-panning');viewport.setPointerCapture(e.pointerId);}});viewport.addEventListener('pointermove',e=>{{if(!panning)return;panX+=e.clientX-lx;panY+=e.clientY-ly;lx=e.clientX;ly=e.clientY;applyTransform();}});function stopPan(){{panning=false;viewport.classList.remove('is-panning');}}viewport.addEventListener('pointerup',stopPan);viewport.addEventListener('pointercancel',stopPan);
-viewport.addEventListener('wheel',e=>{{e.preventDefault();const r=viewport.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,old=scale;scale=Math.min(2.5,Math.max(.12,scale*(e.deltaY<0?1.12:.89)));panX=mx-(mx-panX)*(scale/old);panY=my-(my-panY)*(scale/old);applyTransform();}},{{passive:false}});
+viewport.addEventListener('wheel',e=>{{e.preventDefault();const r=viewport.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,old=scale;scale=Math.min(2.8,Math.max(.08,scale*Math.exp(-e.deltaY*.001)));panX=mx-(mx-panX)*(scale/old);panY=my-(my-panY)*(scale/old);applyTransform();}},{{passive:false}});
 document.getElementById('zoom-in').onclick=()=>{{scale=Math.min(2.5,scale*1.2);applyTransform();}};document.getElementById('zoom-out').onclick=()=>{{scale=Math.max(.12,scale/1.2);applyTransform();}};document.getElementById('zoom-reset').onclick=fitGraph;
 const diagramCard=document.getElementById('relational-diagram');document.getElementById('fullscreen').addEventListener('click',()=>{{diagramCard.classList.toggle('fullscreen');document.getElementById('fullscreen').textContent=diagramCard.classList.contains('fullscreen')?'⛶ Salir de pantalla completa':'⛶ Pantalla completa';requestAnimationFrame(()=>{{fitGraph();drawLinks();}});}});document.addEventListener('keydown',e=>{{if(e.key==='Escape'&&diagramCard.classList.contains('fullscreen'))document.getElementById('fullscreen').click();}});window.addEventListener('resize',()=>{{if(!diagramCard.classList.contains('fullscreen'))fitGraph();}});requestAnimationFrame(layoutCards);
 /*
@@ -570,7 +857,9 @@ network.once('stabilizationIterationsDone',()=>network.fit({{animation:{{duratio
 document.getElementById('zoom-in').onclick=()=>network.moveTo({{scale:network.getScale()*1.25,animation:true}});document.getElementById('zoom-out').onclick=()=>network.moveTo({{scale:network.getScale()/1.25,animation:true}});document.getElementById('zoom-reset').onclick=()=>network.fit({{animation:{{duration:500,easingFunction:'easeInOutQuad'}}}});
 const diagramCard=document.getElementById('relational-diagram');document.getElementById('fullscreen').addEventListener('click',()=>{{diagramCard.classList.toggle('fullscreen');document.getElementById('fullscreen').textContent=diagramCard.classList.contains('fullscreen')?'⛶ Salir de pantalla completa':'⛶ Pantalla completa';requestAnimationFrame(()=>network.redraw());}});document.addEventListener('keydown',(event)=>{{if(event.key==='Escape'&&diagramCard.classList.contains('fullscreen'))document.getElementById('fullscreen').click();}});
 */
-document.getElementById('search').addEventListener('input',(event)=>{{const query=event.target.value.trim().toLowerCase();document.querySelectorAll('.table-card').forEach((card)=>{{card.hidden=!card.dataset.table.includes(query);}});}});
+document.getElementById('search').addEventListener('input',(event)=>{{const query=event.target.value.trim().toLowerCase();document.querySelectorAll('.table-card').forEach((card)=>{{card.hidden=!card.dataset.search.includes(query);}});}});
+</script><script>
+(()=>{{const svg=document.getElementById('native-svg'),world=document.getElementById('native-world'),vp=document.getElementById('native-viewport');let scale=1,ox=10,oy=10,drag=null,pan=null;const apply=()=>world.setAttribute('transform',`translate(${{ox}} ${{oy}}) scale(${{scale}})`);const paths=()=>world.querySelectorAll('.relation-edge');const cards=()=>world.querySelectorAll('.svg-card');function route(p){{const a=[...cards()].find(c=>c.dataset.table===p.dataset.source),b=[...cards()].find(c=>c.dataset.table===p.dataset.target);if(!a||!b)return;const ax=+a.dataset.x,ay=+a.dataset.y,bx=+b.dataset.x,by=+b.dataset.y,sy=ay+53+(+p.dataset.sidx)*23,ty=by+53+(+p.dataset.tidx)*23;if(ax===bx&&ay===by)p.setAttribute('d',`M ${{ax+480}} ${{sy}} H ${{ax+525}} V ${{sy-18}} H ${{ax+505}} V ${{ty}} H ${{ax+480}}`);else p.setAttribute('d',`M ${{ax+480}} ${{sy}} H ${{(ax+480+bx)/2}} V ${{ty}} H ${{bx}}`);}}function routeAll(){{paths().forEach(route);}}svg.addEventListener('pointerdown',e=>{{const c=e.target.closest('.svg-card');if(c){{drag={{c,x:e.clientX,y:e.clientY,ox:+c.dataset.x,oy:+c.dataset.y}};}}else pan={{x:e.clientX,y:e.clientY}};svg.setPointerCapture(e.pointerId);}});svg.addEventListener('pointermove',e=>{{if(drag){{const dx=(e.clientX-drag.x)/scale,dy=(e.clientY-drag.y)/scale;drag.c.dataset.x=drag.ox+dx;drag.c.dataset.y=drag.oy+dy;drag.c.setAttribute('transform',`translate(${{dx}} ${{dy}})`);routeAll();}}else if(pan){{ox+=e.clientX-pan.x;oy+=e.clientY-pan.y;pan={{x:e.clientX,y:e.clientY}};apply();}}}});svg.addEventListener('pointerup',()=>{{drag=pan=null;}});svg.addEventListener('wheel',e=>{{e.preventDefault();scale=Math.max(.08,Math.min(3,scale*(e.deltaY<0?1.12:.89)));apply();}},{{passive:false}});cards().forEach(c=>c.addEventListener('click',()=>{{paths().forEach(p=>{{const active=p.dataset.source===c.dataset.table||p.dataset.target===c.dataset.table;p.setAttribute('opacity',active?'1':'.08');p.setAttribute('stroke',active?'#00f3ff':'#64748b');}});}}));paths().forEach(p=>p.addEventListener('click',()=>{{paths().forEach(x=>x.setAttribute('opacity',x===p?'1':'.08'));p.setAttribute('stroke','#4ade80');}}));document.getElementById('svg-export').onclick=()=>{{const copy=svg.cloneNode(true);copy.setAttribute('xmlns','http://www.w3.org/2000/svg');const blob=new Blob([new XMLSerializer().serializeToString(copy)],{{type:'image/svg+xml;charset=utf-8'}}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='diagrama_relacional.svg';a.click();URL.revokeObjectURL(a.href);}};document.getElementById('png-export').onclick=()=>{{const copy=svg.cloneNode(true);copy.setAttribute('xmlns','http://www.w3.org/2000/svg');const url=URL.createObjectURL(new Blob([new XMLSerializer().serializeToString(copy)],{{type:'image/svg+xml;charset=utf-8'}})),img=new Image();img.onload=()=>{{const canvas=document.createElement('canvas');canvas.width=svg.viewBox.baseVal.width*2;canvas.height=svg.viewBox.baseVal.height*2;const ctx=canvas.getContext('2d');ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.scale(2,2);ctx.drawImage(img,0,0);URL.revokeObjectURL(url);canvas.toBlob(blob=>{{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='diagrama_relacional.png';a.click();}},'image/png');}};img.src=url;}};document.getElementById('native-in').onclick=()=>{{scale=Math.min(3,scale*1.2);apply();}};document.getElementById('native-out').onclick=()=>{{scale=Math.max(.08,scale/1.2);apply();}};document.getElementById('native-fit').onclick=()=>{{scale=Math.min((vp.clientWidth-24)/svg.viewBox.baseVal.width,(vp.clientHeight-24)/svg.viewBox.baseVal.height,1);ox=oy=12;apply();}};apply();}})();
 </script></body></html>'''
     (OUT / "index.html").write_text(html, encoding="utf-8")
 
