@@ -1,0 +1,3322 @@
+{
+  "source": "respaldo-20-1-10-2026.sql",
+  "database": "db_test",
+  "mysql_version": "8.0.36",
+  "sensitive_data_processed": false,
+  "tables": [
+    {
+      "name": "tb_cart_addresses",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "cart_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK/FK",
+          "definition": "`cart_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "street_address",
+          "type": "varchar(255)",
+          "length_precision": "255",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`street_address` varchar(255) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(255); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "city",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`city` varchar(100) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "state",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`state` varchar(100) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "postal_code",
+          "type": "varchar(20)",
+          "length_precision": "20",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`postal_code` varchar(20) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(20); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "country",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "'MÃ©xico'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`country` varchar(100) NOT NULL DEFAULT 'MÃ©xico'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "cart_ID"
+          ],
+          "definition": "UNIQUE KEY `uk_cart_address` (`cart_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_cart_addresses_cart",
+          "columns": [
+            "cart_ID"
+          ],
+          "table": "tb_carts",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_addresses_cart` FOREIGN KEY (`cart_ID`) REFERENCES `tb_carts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_cart_items",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "cart_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`cart_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "product_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`product_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "quantity",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`quantity` int unsigned NOT NULL DEFAULT '1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "unit_price",
+          "type": "decimal(10,2)",
+          "length_precision": "10,2",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`unit_price` decimal(10,2) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(10,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "added_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`added_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_cart_items_cart",
+          "columns": [
+            "cart_ID"
+          ],
+          "table": "tb_carts",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_items_cart` FOREIGN KEY (`cart_ID`) REFERENCES `tb_carts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        },
+        {
+          "name": "fk_cart_items_product",
+          "columns": [
+            "product_ID"
+          ],
+          "table": "tb_products",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_items_product` FOREIGN KEY (`product_ID`) REFERENCES `tb_products` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_cart_items_cart_idx` (`cart_ID`)",
+        "KEY `fk_cart_items_product_idx` (`product_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_cart_status",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "cart_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK/FK",
+          "definition": "`cart_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "status",
+          "type": "enum('Active','Abandoned','Converted','Cancelled')",
+          "length_precision": "'Active','Abandoned','Converted','Cancelled'",
+          "nullable": "No",
+          "default": "'Active'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` enum('Active','Abandoned','Converted','Cancelled') NOT NULL DEFAULT 'Active'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Active','Abandoned','Converted','Cancelled')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "last_change",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_change` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "cart_ID"
+          ],
+          "definition": "UNIQUE KEY `uk_cart_status` (`cart_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_cart_status_cart",
+          "columns": [
+            "cart_ID"
+          ],
+          "table": "tb_carts",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_status_cart` FOREIGN KEY (`cart_ID`) REFERENCES `tb_carts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_carts",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK/FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "user_ID"
+          ],
+          "definition": "UNIQUE KEY `uk_cart_user` (`user_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_cart_user",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_user` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_logs",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "table_name",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "operation",
+          "type": "enum('Create','Read','Update','Delete')",
+          "length_precision": "'Create','Read','Update','Delete'",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`operation` enum('Create','Read','Update','Delete') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Create','Read','Update','Delete')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "db_user",
+          "type": "varchar(80)",
+          "length_precision": "80",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`db_user` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(80); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "description",
+          "type": "text",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+          "value_class": "Monovalor (contiene datos compuestos)",
+          "origin": "Almacenado",
+          "obligation": "Opcional",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "text; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "operation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`operation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "operation_status",
+          "type": "varchar(20)",
+          "length_precision": "20",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`operation_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(20); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB AUTO_INCREMENT=37854 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+    },
+    {
+      "name": "tb_payments",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "order_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`order_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "amount",
+          "type": "decimal(12,2)",
+          "length_precision": "12,2",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`amount` decimal(12,2) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(12,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "currency",
+          "type": "char(3)",
+          "length_precision": "3",
+          "nullable": "No",
+          "default": "'MXN'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`currency` char(3) NOT NULL DEFAULT 'MXN'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "char(3); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "payment_method",
+          "type": "enum('Card','SPEI','Transfer','Cash')",
+          "length_precision": "'Card','SPEI','Transfer','Cash'",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`payment_method` enum('Card','SPEI','Transfer','Cash') NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Card','SPEI','Transfer','Cash')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "provider",
+          "type": "varchar(50)",
+          "length_precision": "50",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`provider` varchar(50) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(50); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "provider_reference",
+          "type": "varchar(150)",
+          "length_precision": "150",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`provider_reference` varchar(150) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(150); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "payment_status",
+          "type": "enum('Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded')",
+          "length_precision": "'Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded'",
+          "nullable": "No",
+          "default": "'Pending'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`payment_status` enum('Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded') NOT NULL DEFAULT 'Pending'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 9,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 10,
+          "name": "paid_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`paid_date` datetime DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 11,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "provider",
+            "provider_reference"
+          ],
+          "definition": "UNIQUE KEY `uk_payment_reference` (`provider`,`provider_reference`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_payment_order",
+          "columns": [
+            "order_ID"
+          ],
+          "table": "tbb_orders",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_payment_order` FOREIGN KEY (`order_ID`) REFERENCES `tbb_orders` (`ID`) ON DELETE RESTRICT ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_payment_order_idx` (`order_ID`)"
+      ],
+      "checks": [
+        "CONSTRAINT `chk_payment_amount` CHECK ((`amount` > 0))"
+      ],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_products",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "SKU",
+          "type": "varchar(50)",
+          "length_precision": "50",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`SKU` varchar(50) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(50); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "name",
+          "type": "varchar(250)",
+          "length_precision": "250",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`name` varchar(250) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(250); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "description",
+          "type": "text",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`description` text",
+          "value_class": "Monovalor (contiene datos compuestos)",
+          "origin": "Almacenado",
+          "obligation": "Opcional",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "text; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "current_price",
+          "type": "decimal(10,2)",
+          "length_precision": "10,2",
+          "nullable": "No",
+          "default": "'0.00'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`current_price` decimal(10,2) NOT NULL DEFAULT '0.00'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(10,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "current_stock",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "'0'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`current_stock` int unsigned NOT NULL DEFAULT '0'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "Sí",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 9,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "SKU"
+          ],
+          "definition": "UNIQUE KEY `SKU` (`SKU`)"
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB AUTO_INCREMENT=21391 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_seller_orders",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "order_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK/FK",
+          "definition": "`order_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "seller_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK/FK",
+          "definition": "`seller_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "subtotal",
+          "type": "decimal(12,2)",
+          "length_precision": "12,2",
+          "nullable": "No",
+          "default": "'0.00'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`subtotal` decimal(12,2) NOT NULL DEFAULT '0.00'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(12,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "shipping_cost",
+          "type": "decimal(12,2)",
+          "length_precision": "12,2",
+          "nullable": "No",
+          "default": "'0.00'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`shipping_cost` decimal(12,2) NOT NULL DEFAULT '0.00'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(12,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "fulfillment_status",
+          "type": "enum('Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned')",
+          "length_precision": "'Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned'",
+          "nullable": "No",
+          "default": "'Pending'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`fulfillment_status` enum('Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned') NOT NULL DEFAULT 'Pending'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "order_ID",
+            "seller_ID"
+          ],
+          "definition": "UNIQUE KEY `uk_order_seller` (`order_ID`,`seller_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_seller_order_order",
+          "columns": [
+            "order_ID"
+          ],
+          "table": "tbb_orders",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_seller_order_order` FOREIGN KEY (`order_ID`) REFERENCES `tbb_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        },
+        {
+          "name": "fk_seller_order_seller",
+          "columns": [
+            "seller_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_seller_order_seller` FOREIGN KEY (`seller_ID`) REFERENCES `tb_users` (`ID`) ON DELETE RESTRICT ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_seller_order_seller_idx` (`seller_ID`)"
+      ],
+      "checks": [
+        "CONSTRAINT `chk_shipping_positive` CHECK ((`shipping_cost` >= 0))",
+        "CONSTRAINT `chk_subtotal_positive` CHECK ((`subtotal` >= 0))"
+      ],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_user_addresses",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "bigint unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` bigint unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "bigint unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "address_label",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`address_label` varchar(100) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "recipient_name",
+          "type": "varchar(150)",
+          "length_precision": "150",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`recipient_name` varchar(150) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(150); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "recipient_phone",
+          "type": "varchar(25)",
+          "length_precision": "25",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`recipient_phone` varchar(25) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(25); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "delivery_instructions",
+          "type": "varchar(500)",
+          "length_precision": "500",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`delivery_instructions` varchar(500) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(500); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "latitude",
+          "type": "decimal(10,7)",
+          "length_precision": "10,7",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`latitude` decimal(10,7) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(10,7); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "longitude",
+          "type": "decimal(10,7)",
+          "length_precision": "10,7",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`longitude` decimal(10,7) DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(10,7); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 9,
+          "name": "is_default",
+          "type": "tinyint(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "'0'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`is_default` tinyint(1) NOT NULL DEFAULT '0'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "tinyint(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 10,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 11,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 12,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_addresses_users",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_addresses_users` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `idx_user_addresses` (`user_ID`)"
+      ],
+      "checks": [
+        "CONSTRAINT `chk_coordinates` CHECK ((((`latitude` is null) and (`longitude` is null)) or ((`latitude` is not null) and (`longitude` is not null))))",
+        "CONSTRAINT `chk_latitude` CHECK ((`latitude` between -(90) and 90))",
+        "CONSTRAINT `chk_longitude` CHECK ((`longitude` between -(180) and 180))"
+      ],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tb_users",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "email",
+          "type": "varchar(80)",
+          "length_precision": "80",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`email` varchar(80) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(80); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "nickname",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`nickname` varchar(100) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "password",
+          "type": "varchar(255)",
+          "length_precision": "255",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`password` varchar(255) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(255); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "last_login",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`last_login` datetime DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "email"
+          ],
+          "definition": "UNIQUE KEY `email` (`email`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "nickname"
+          ],
+          "definition": "UNIQUE KEY `nickname` (`nickname`)"
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbb_orders",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "key",
+          "type": "varchar(40)",
+          "length_precision": "40",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`key` varchar(40) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(40); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "total_products",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`total_products` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "total_cost",
+          "type": "decimal(10,3)",
+          "length_precision": "10,3",
+          "nullable": "No",
+          "default": "'0.000'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`total_cost` decimal(10,3) NOT NULL DEFAULT '0.000'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(10,3); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "status_string",
+          "type": "enum('Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended')",
+          "length_precision": "'Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended'",
+          "nullable": "No",
+          "default": "'Registered'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status_string` enum('Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended') NOT NULL DEFAULT 'Registered'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "Sí",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 9,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_user_2",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_user_2` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`) ON DELETE RESTRICT ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_user_2_idx` (`user_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbc_categories",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "name",
+          "type": "varchar(120)",
+          "length_precision": "120",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`name` varchar(120) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(120); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "description",
+          "type": "text",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+          "value_class": "Monovalor (contiene datos compuestos)",
+          "origin": "Almacenado",
+          "obligation": "Opcional",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "text; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "sup_id_category",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`sup_id_category` int unsigned DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "name"
+          ],
+          "definition": "UNIQUE KEY `name` (`name`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_superior_category",
+          "columns": [
+            "sup_id_category"
+          ],
+          "table": "tbc_categories",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_superior_category` FOREIGN KEY (`sup_id_category`) REFERENCES `tbc_categories` (`ID`)"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_superior_category` (`sup_id_category`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+    },
+    {
+      "name": "tbc_payment_methods_types",
+      "columns": [
+        {
+          "position": 1,
+          "name": "id",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`id` int NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "code",
+          "type": "varchar(50)",
+          "length_precision": "50",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`code` varchar(50) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(50); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "description",
+          "type": "varchar(255)",
+          "length_precision": "255",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`description` varchar(255) DEFAULT NULL",
+          "value_class": "Monovalor (contiene datos compuestos)",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(255); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "id"
+          ],
+          "definition": "PRIMARY KEY (`id`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "code"
+          ],
+          "definition": "UNIQUE KEY `code_UNIQUE` (`code`)"
+        }
+      ],
+      "foreign_keys": [],
+      "indexes": [],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_cart_items",
+      "columns": [
+        {
+          "position": 1,
+          "name": "cart_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`cart_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "product_offer_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK",
+          "definition": "`product_offer_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "quantity",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`quantity` int unsigned NOT NULL DEFAULT '1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "cart_ID",
+            "product_offer_ID"
+          ],
+          "definition": "PRIMARY KEY (`cart_ID`,`product_offer_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_cart_item_cart",
+          "columns": [
+            "cart_ID"
+          ],
+          "table": "tb_carts",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_cart_item_cart` FOREIGN KEY (`cart_ID`) REFERENCES `tb_carts` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_cart_item_offer_idx` (`product_offer_ID`)"
+      ],
+      "checks": [
+        "CONSTRAINT `chk_cart_quantity` CHECK ((`quantity` > 0))"
+      ],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_order_items",
+      "columns": [
+        {
+          "position": 1,
+          "name": "ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`ID` int unsigned NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "seller_order_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`seller_order_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "product_offer_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`product_offer_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "product_name",
+          "type": "varchar(255)",
+          "length_precision": "255",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`product_name` varchar(255) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(255); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "quantity",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`quantity` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "unit_price",
+          "type": "decimal(12,2)",
+          "length_precision": "12,2",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`unit_price` decimal(12,2) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(12,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "subtotal",
+          "type": "decimal(12,2)",
+          "length_precision": "12,2",
+          "nullable": "Sí",
+          "default": "No especificado",
+          "extras": "GENERATED",
+          "key": "No",
+          "definition": "`subtotal` decimal(12,2) GENERATED ALWAYS AS ((`quantity` * `unit_price`)) STORED",
+          "value_class": "Monovalor",
+          "origin": "Derivado",
+          "obligation": "Opcional",
+          "advanced_key": "No",
+          "nature": "Cuantitativa continua",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "decimal(12,2); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 8,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "ID"
+          ],
+          "definition": "PRIMARY KEY (`ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_order_item_seller_order",
+          "columns": [
+            "seller_order_ID"
+          ],
+          "table": "tb_seller_orders",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `fk_order_item_seller_order` FOREIGN KEY (`seller_order_ID`) REFERENCES `tb_seller_orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_order_item_seller_order_idx` (`seller_order_ID`)",
+        "KEY `fk_order_item_offer_idx` (`product_offer_ID`)"
+      ],
+      "checks": [
+        "CONSTRAINT `chk_item_quantity` CHECK ((`quantity` > 0))",
+        "CONSTRAINT `chk_item_unit_price` CHECK ((`unit_price` >= 0))"
+      ],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_products_categories",
+      "columns": [
+        {
+          "position": 1,
+          "name": "category_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`category_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "product_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`product_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "category_ID",
+            "product_ID"
+          ],
+          "definition": "PRIMARY KEY (`category_ID`,`product_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fb_category",
+          "columns": [
+            "category_ID"
+          ],
+          "table": "tbc_categories",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fb_category` FOREIGN KEY (`category_ID`) REFERENCES `tbc_categories` (`ID`)"
+        },
+        {
+          "name": "fk_product",
+          "columns": [
+            "product_ID"
+          ],
+          "table": "tb_products",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_product` FOREIGN KEY (`product_ID`) REFERENCES `tb_products` (`ID`)"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_product` (`product_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_products_users_providers",
+      "columns": [
+        {
+          "position": 1,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "product_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`product_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "type_ownership",
+          "type": "enum('Owner','Reseller','Distributor')",
+          "length_precision": "'Owner','Reseller','Distributor'",
+          "nullable": "Sí",
+          "default": "NULL",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`type_ownership` enum('Owner','Reseller','Distributor') DEFAULT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "enum('Owner','Reseller','Distributor')",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "available_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`available_date` datetime NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 7,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "user_ID",
+            "product_ID"
+          ],
+          "definition": "PRIMARY KEY (`user_ID`,`product_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_products2",
+          "columns": [
+            "product_ID"
+          ],
+          "table": "tb_products",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_products2` FOREIGN KEY (`product_ID`) REFERENCES `tb_products` (`ID`)"
+        },
+        {
+          "name": "fk_user1",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_user1` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`)"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_products2` (`product_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_user_payment_methods",
+      "columns": [
+        {
+          "position": 1,
+          "name": "id",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "AUTO_INCREMENT",
+          "key": "PK",
+          "definition": "`id` int NOT NULL AUTO_INCREMENT",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "PK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "payment_method_type_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "FK",
+          "definition": "`payment_method_type_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "FK",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "provider",
+          "type": "varchar(100)",
+          "length_precision": "100",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`provider` varchar(100) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(100); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "provider_method_ref",
+          "type": "varchar(255)",
+          "length_precision": "255",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "UK",
+          "definition": "`provider_method_ref` varchar(255) NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "UK",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "varchar(255); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 6,
+          "name": "created_at",
+          "type": "timestamp",
+          "length_precision": "No especificado",
+          "nullable": "Sí",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "timestamp; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "id"
+          ],
+          "definition": "PRIMARY KEY (`id`)"
+        },
+        {
+          "type": "UK",
+          "columns": [
+            "provider",
+            "provider_method_ref"
+          ],
+          "definition": "UNIQUE KEY `uk_provider_method` (`provider`,`provider_method_ref`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "tbd_user_payment_methods_ibfk_1",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "CASCADE",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `tbd_user_payment_methods_ibfk_1` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE"
+        },
+        {
+          "name": "tbd_user_payment_methods_ibfk_2",
+          "columns": [
+            "payment_method_type_ID"
+          ],
+          "table": "tbc_payment_methods_types",
+          "references": [
+            "id"
+          ],
+          "on_delete": "RESTRICT",
+          "on_update": "CASCADE",
+          "definition": "CONSTRAINT `tbd_user_payment_methods_ibfk_2` FOREIGN KEY (`payment_method_type_ID`) REFERENCES `tbc_payment_methods_types` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE"
+        }
+      ],
+      "indexes": [
+        "KEY `tbd_user_payment_methods_ibfk_1` (`user_ID`)",
+        "KEY `tbd_user_payment_methods_ibfk_2` (`payment_method_type_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    },
+    {
+      "name": "tbd_users_wishlist_products",
+      "columns": [
+        {
+          "position": 1,
+          "name": "user_ID",
+          "type": "int",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`user_ID` int NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 2,
+          "name": "product_ID",
+          "type": "int unsigned",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "No especificado",
+          "extras": "No especificado",
+          "key": "PK/FK",
+          "definition": "`product_ID` int unsigned NOT NULL",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el usuario)",
+          "advanced_key": "PK/FK",
+          "nature": "Cuantitativa discreta",
+          "formal_composition": "{dígito}",
+          "domain": "int unsigned; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 3,
+          "name": "status",
+          "type": "bit(1)",
+          "length_precision": "1",
+          "nullable": "No",
+          "default": "b'1'",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`status` bit(1) NOT NULL DEFAULT b'1'",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cualitativa nominal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "bit(1); dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 4,
+          "name": "creation_date",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "No especificado",
+          "key": "No",
+          "definition": "`creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        },
+        {
+          "position": 5,
+          "name": "last_update",
+          "type": "datetime",
+          "length_precision": "No especificado",
+          "nullable": "No",
+          "default": "CURRENT_TIMESTAMP",
+          "extras": "ON UPDATE CURRENT_TIMESTAMP",
+          "key": "No",
+          "definition": "`last_update` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+          "value_class": "Monovalor",
+          "origin": "Almacenado",
+          "obligation": "Obligatorio (provisto por el sistema)",
+          "advanced_key": "No",
+          "nature": "Cuantitativa temporal",
+          "formal_composition": "Valor atómico del tipo declarado",
+          "domain": "datetime; dominio exacto no acotado por SQL",
+          "description": "No especificado en el SQL; función documentada según el nombre del atributo (inferido)."
+        }
+      ],
+      "keys": [
+        {
+          "type": "PK",
+          "columns": [
+            "user_ID",
+            "product_ID"
+          ],
+          "definition": "PRIMARY KEY (`user_ID`,`product_ID`)"
+        }
+      ],
+      "foreign_keys": [
+        {
+          "name": "fk_products3",
+          "columns": [
+            "product_ID"
+          ],
+          "table": "tb_products",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_products3` FOREIGN KEY (`product_ID`) REFERENCES `tb_products` (`ID`)"
+        },
+        {
+          "name": "fk_user2",
+          "columns": [
+            "user_ID"
+          ],
+          "table": "tb_users",
+          "references": [
+            "ID"
+          ],
+          "on_delete": "No especificado",
+          "on_update": "No especificado",
+          "definition": "CONSTRAINT `fk_user2` FOREIGN KEY (`user_ID`) REFERENCES `tb_users` (`ID`)"
+        }
+      ],
+      "indexes": [
+        "KEY `fk_products3` (`product_ID`)"
+      ],
+      "checks": [],
+      "engine": "InnoDB",
+      "options": "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+    }
+  ],
+  "views": [],
+  "triggers": [],
+  "procedures": [
+    {
+      "name": "sp_restore_product",
+      "sql": "CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_restore_product`(IN p_product_id INT UNSIGNED)\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 \n        FROM tb_products \n        WHERE ID = p_product_id\n    ) THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT = 'El producto especificado no existe';\n    END IF;\n\n    IF EXISTS (\n        SELECT 1 \n        FROM tb_products \n        WHERE ID = p_product_id \n          AND status = b'1'\n    ) THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT = 'El producto ya se encuentra activo';\n    END IF;\n\n    UPDATE tb_products \n    SET status = b'1' \n    WHERE ID = p_product_id;\nEND ;;\n",
+      "parameters": "(IN p_product_id INT UNSIGNED)"
+    },
+    {
+      "name": "sp_soft_delete_product",
+      "sql": "CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_soft_delete_product`(IN p_product_id INT UNSIGNED)\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 \n        FROM tb_products \n        WHERE ID = p_product_id\n    ) THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT = 'El producto especificado no existe';\n    END IF;\n\n    IF EXISTS (\n        SELECT 1 \n        FROM tb_products \n        WHERE ID = p_product_id \n          AND status = b'0'\n    ) THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT = 'El producto ya se encuentra eliminado';\n    END IF;\n\n    UPDATE tb_products \n    SET status = b'0' \n    WHERE ID = p_product_id;\nEND ;;\n",
+      "parameters": "(IN p_product_id INT UNSIGNED)"
+    },
+    {
+      "name": "sp_soft_delete_user",
+      "sql": "CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_soft_delete_user`(\n    IN p_user_id INT UNSIGNED\n)\n    MODIFIES SQL DATA\nBEGIN\n    DECLARE v_db_user VARCHAR(32);\n    DECLARE v_has_role INT DEFAULT 0;\n    DECLARE v_exists INT DEFAULT 0;\n    DECLARE v_status TINYINT DEFAULT NULL;\n    DECLARE v_affected INT DEFAULT 0;\n\n    -- 1. Identificar usuario de conexiÃ³n\n    SET v_db_user = SUBSTRING_INDEX(USER(), '@', 1);\n\n    -- 2. Verificar roles autorizados asignados\n    SELECT COUNT(*)\n    INTO v_has_role\n    FROM mysql.role_edges re\n    WHERE re.TO_USER = v_db_user\n      AND re.TO_HOST = '%'\n      AND re.FROM_HOST = '%'\n      AND re.FROM_USER IN (\n          'superadmin',\n          'admin',\n          'support'\n      );\n\n    IF v_has_role = 0 THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'Acceso denegado: rol no autorizado';\n    END IF;\n\n    -- 3. Validar identificador\n    IF p_user_id IS NULL OR p_user_id = 0 THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'El identificador del usuario es invÃ¡lido';\n    END IF;\n\n    -- 4. Comprobar existencia y estado\n    SELECT COUNT(*), MAX(status + 0)\n    INTO v_exists, v_status\n    FROM tb_users\n    WHERE ID = p_user_id;\n\n    IF v_exists = 0 THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'El usuario especificado no existe';\n    END IF;\n\n    -- 5. Comprobar estado actual\n    IF v_status = 0 THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'El usuario ya se encuentra inactivo';\n    END IF;\n\n    IF v_status IS NULL THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'El usuario tiene un estado invÃ¡lido';\n    END IF;\n\n    -- 6. EliminaciÃ³n lÃ³gica\n    UPDATE tb_users\n    SET status = b'0'\n    WHERE ID = p_user_id\n      AND status = b'1';\n\n    SET v_affected = ROW_COUNT();\n\n    IF v_affected <> 1 THEN\n        SIGNAL SQLSTATE '45000'\n        SET MESSAGE_TEXT =\n            'No se pudo desactivar el usuario';\n    END IF;\n\n    -- 7. ConfirmaciÃ³n\n    SELECT\n        'Usuario desactivado correctamente' AS mensaje,\n        p_user_id AS user_id,\n        v_db_user AS ejecutado_por,\n        'Inactivo' AS estado_actual,\n        CURRENT_TIMESTAMP AS fecha_operacion;\n\nEND ;;\n",
+      "parameters": "(\n    IN p_user_id INT UNSIGNED\n)"
+    }
+  ],
+  "audit": {
+    "requested_counts": {
+      "tables": 20,
+      "views": 18,
+      "triggers": 57,
+      "procedures": 3
+    },
+    "actual_counts": {
+      "tables": 19,
+      "views": 0,
+      "triggers": 0,
+      "procedures": 3
+    },
+    "missing_requested_tables": [
+      "tb_buyer_orders",
+      "tb_orders",
+      "tbd_address_components",
+      "tbd_carts_items",
+      "tbd_order_details",
+      "tbc_payment_methods",
+      "tbd_wishlist"
+    ],
+    "unexpected_tables": [
+      "tb_cart_addresses",
+      "tb_cart_items",
+      "tb_cart_status",
+      "tb_seller_orders",
+      "tbb_orders",
+      "tbd_cart_items"
+    ],
+    "orphans_search": "Verificado: sin referencias huérfanas"
+  }
+}

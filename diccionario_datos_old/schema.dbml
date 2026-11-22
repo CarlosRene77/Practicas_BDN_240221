@@ -1,0 +1,209 @@
+Table tb_cart_addresses {
+  ID int unsigned [pk]
+  cart_ID int unsigned [not null]
+  street_address varchar(255) [not null]
+  city varchar(100) [not null]
+  state varchar(100) [not null]
+  postal_code varchar(20) [not null]
+  country varchar(100) [not null]
+  creation_date datetime [not null]
+}
+
+Table tb_cart_items {
+  ID int unsigned [pk]
+  cart_ID int unsigned [not null]
+  product_ID int unsigned [not null]
+  quantity int unsigned [not null]
+  unit_price decimal(10,2) [not null]
+  added_date datetime [not null]
+}
+
+Table tb_cart_status {
+  ID int unsigned [pk]
+  cart_ID int unsigned [not null]
+  status enum('Active','Abandoned','Converted','Cancelled') [not null]
+  last_change datetime [not null]
+}
+
+Table tb_carts {
+  ID int unsigned [pk]
+  user_ID int [not null]
+  creation_date datetime [not null]
+  last_update datetime 
+}
+
+Table tb_logs {
+  ID int [pk]
+  table_name varchar(100) [not null]
+  operation enum('Create','Read','Update','Delete') [not null]
+  db_user varchar(80) [not null]
+  description text 
+  operation_date datetime [not null]
+  operation_status varchar(20) 
+}
+
+Table tb_payments {
+  ID int unsigned [pk]
+  order_ID int unsigned [not null]
+  amount decimal(12,2) [not null]
+  currency char(3) [not null]
+  payment_method enum('Card','SPEI','Transfer','Cash') [not null]
+  provider varchar(50) 
+  provider_reference varchar(150) 
+  payment_status enum('Pending','Authorized','Paid','Failed','Refunded','PartiallyRefunded') [not null]
+  creation_date datetime [not null]
+  paid_date datetime 
+  last_update datetime 
+}
+
+Table tb_products {
+  ID int unsigned [pk]
+  SKU varchar(50) [not null]
+  name varchar(250) [not null]
+  description text 
+  current_price decimal(10,2) [not null]
+  current_stock int unsigned [not null]
+  status bit(1) 
+  creation_date datetime [not null]
+  last_update datetime [not null]
+}
+
+Table tb_seller_orders {
+  ID int unsigned [pk]
+  order_ID int unsigned [not null]
+  seller_ID int [not null]
+  subtotal decimal(12,2) [not null]
+  shipping_cost decimal(12,2) [not null]
+  fulfillment_status enum('Pending','Accepted','Preparing','Sent','Delivered','Canceled','Returned') [not null]
+  creation_date datetime [not null]
+  last_update datetime 
+}
+
+Table tb_user_addresses {
+  ID bigint unsigned [pk]
+  user_ID int [not null]
+  address_label varchar(100) [not null]
+  recipient_name varchar(150) 
+  recipient_phone varchar(25) 
+  delivery_instructions varchar(500) 
+  latitude decimal(10,7) 
+  longitude decimal(10,7) 
+  is_default tinyint(1) [not null]
+  status bit(1) [not null]
+  creation_date datetime [not null]
+  last_update datetime 
+}
+
+Table tb_users {
+  ID int [pk]
+  email varchar(80) [not null]
+  nickname varchar(100) [not null]
+  password varchar(255) [not null]
+  creation_date datetime [not null]
+  last_update datetime 
+  last_login datetime 
+  status bit(1) [not null]
+}
+
+Table tbb_orders {
+  ID int unsigned [pk]
+  key varchar(40) [not null]
+  user_ID int [not null]
+  total_products int [not null]
+  total_cost decimal(10,3) [not null]
+  status_string enum('Registered','Wishlist','Payed','Canceled','Delivered','Devolved','Attended','Sended') [not null]
+  status bit(1) 
+  creation_date datetime [not null]
+  last_update datetime 
+}
+
+Table tbc_categories {
+  ID int unsigned [pk]
+  name varchar(120) [not null]
+  description text 
+  sup_id_category int unsigned 
+  status bit(1) [not null]
+  creation_date datetime [not null]
+  last_update datetime [not null]
+}
+
+Table tbc_payment_methods_types {
+  id int [pk]
+  code varchar(50) [not null]
+  description varchar(255) 
+}
+
+Table tbd_cart_items {
+  cart_ID int unsigned [not null]
+  product_offer_ID int unsigned [pk]
+  quantity int unsigned [not null]
+  creation_date datetime [not null]
+}
+
+Table tbd_order_items {
+  ID int unsigned [pk]
+  seller_order_ID int unsigned [not null]
+  product_offer_ID int unsigned [not null]
+  product_name varchar(255) [not null]
+  quantity int unsigned [not null]
+  unit_price decimal(12,2) [not null]
+  subtotal decimal(12,2) 
+  creation_date datetime [not null]
+}
+
+Table tbd_products_categories {
+  category_ID int unsigned [not null]
+  product_ID int unsigned [not null]
+  status bit(1) [not null]
+  creation_date datetime [not null]
+  last_update datetime [not null]
+}
+
+Table tbd_products_users_providers {
+  user_ID int [not null]
+  product_ID int unsigned [not null]
+  type_ownership enum('Owner','Reseller','Distributor') 
+  status bit(1) [not null]
+  available_date datetime [not null]
+  creation_date datetime [not null]
+  last_update datetime [not null]
+}
+
+Table tbd_user_payment_methods {
+  id int [pk]
+  user_ID int [not null]
+  payment_method_type_ID int [not null]
+  provider varchar(100) [not null]
+  provider_method_ref varchar(255) [not null]
+  created_at timestamp 
+}
+
+Table tbd_users_wishlist_products {
+  user_ID int [not null]
+  product_ID int unsigned [not null]
+  status bit(1) [not null]
+  creation_date datetime [not null]
+  last_update datetime [not null]
+}
+
+Ref: tb_cart_addresses.cart_ID > tb_carts.ID
+Ref: tb_cart_items.cart_ID > tb_carts.ID
+Ref: tb_cart_items.product_ID > tb_products.ID
+Ref: tb_cart_status.cart_ID > tb_carts.ID
+Ref: tb_carts.user_ID > tb_users.ID
+Ref: tb_payments.order_ID > tbb_orders.ID
+Ref: tb_seller_orders.order_ID > tbb_orders.ID
+Ref: tb_seller_orders.seller_ID > tb_users.ID
+Ref: tb_user_addresses.user_ID > tb_users.ID
+Ref: tbb_orders.user_ID > tb_users.ID
+Ref: tbc_categories.sup_id_category > tbc_categories.ID
+Ref: tbd_cart_items.cart_ID > tb_carts.ID
+Ref: tbd_order_items.seller_order_ID > tb_seller_orders.ID
+Ref: tbd_products_categories.category_ID > tbc_categories.ID
+Ref: tbd_products_categories.product_ID > tb_products.ID
+Ref: tbd_products_users_providers.product_ID > tb_products.ID
+Ref: tbd_products_users_providers.user_ID > tb_users.ID
+Ref: tbd_user_payment_methods.user_ID > tb_users.ID
+Ref: tbd_user_payment_methods.payment_method_type_ID > tbc_payment_methods_types.id
+Ref: tbd_users_wishlist_products.product_ID > tb_products.ID
+Ref: tbd_users_wishlist_products.user_ID > tb_users.ID

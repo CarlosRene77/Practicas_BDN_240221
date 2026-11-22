@@ -1,0 +1,94 @@
+/* =========================================================
+   00_usuarios_roles_corregido.sql
+   Tu script de usuarios y roles, con 4 correcciones (marcadas CORREGIDO)
+   y 1 adición necesaria para el caso de prueba (marcada NUEVO).
+   Ejecútalo con una cuenta con privilegios de administración (root).
+   ========================================================= */
+
+/* =========================================================
+   1. CREACIÓN DE USUARIOS REMOTOS
+   ========================================================= */
+CREATE USER IF NOT EXISTS 'carlos.morales'@'%' IDENTIFIED BY '240221';
+CREATE USER IF NOT EXISTS 'marco.ramirez'@'%' IDENTIFIED BY 'qwerty123';
+CREATE USER IF NOT EXISTS 'uriel.valenzuela'@'%' IDENTIFIED BY '240485';
+CREATE USER IF NOT EXISTS 'adrian.rios'@'%' IDENTIFIED BY '240165';
+CREATE USER IF NOT EXISTS 'pablo.reyes'@'%' IDENTIFIED BY '240148';
+CREATE USER IF NOT EXISTS 'jonhy.neri'@'%' IDENTIFIED BY '240598';
+CREATE USER IF NOT EXISTS 'luis.cazares'@'%' IDENTIFIED BY '240343';
+CREATE USER IF NOT EXISTS 'saul.barrios'@'%' IDENTIFIED BY '240196';
+CREATE USER IF NOT EXISTS 'app_movil'@'%' IDENTIFIED BY 'Mobile890';
+CREATE USER IF NOT EXISTS 'app_web'@'%' IDENTIFIED BY 'Web123';
+
+/* =========================================================
+   2. CREACIÓN DE ROLES ECOMMERCE
+   ========================================================= */
+CREATE ROLE IF NOT EXISTS 'superadmin';
+CREATE ROLE IF NOT EXISTS 'admin';
+CREATE ROLE IF NOT EXISTS 'seller';
+CREATE ROLE IF NOT EXISTS 'buyer';
+CREATE ROLE IF NOT EXISTS 'common_user';
+CREATE ROLE IF NOT EXISTS 'user_not_registered';
+CREATE ROLE IF NOT EXISTS 'support';
+
+/* =========================================================
+   3. ASIGNACIÓN DE PRIVILEGIOS A LOS ROLES
+   (los privilegios que necesita el caso de prueba 1 están en
+    01_ajustes_db_test_ajustado.sql)
+   ========================================================= */
+-- SUPERADMIN (Acceso total)
+GRANT ALL PRIVILEGES ON *.* TO 'superadmin' WITH GRANT OPTION;
+
+-- ADMIN (Acceso total a la base de datos de la app)
+GRANT ALL PRIVILEGES ON db_test.* TO 'admin';
+
+-- SUPPORT (Lectura/escritura en tablas clave de atención)
+GRANT SELECT, UPDATE ON db_test.tb_users TO 'support';
+GRANT SELECT, UPDATE ON db_test.tb_products TO 'support';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbc_categories TO 'support';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_products_categories TO 'support';
+-- Nota: sp_soft_delete_user no existe en el respaldo; MySQL permite el GRANT,
+-- pero el rol no podrá ejecutarlo hasta que el procedimiento se cree.
+GRANT EXECUTE ON PROCEDURE db_test.sp_soft_delete_user TO 'support'@'%';
+
+-- SELLER (Gestión de catálogo)
+GRANT SELECT, INSERT, UPDATE ON db_test.tb_products TO 'seller';
+GRANT SELECT ON db_test.tbc_categories TO 'seller';
+
+-- BUYER --
+GRANT SELECT, INSERT, UPDATE ON db_test.tb_carts TO 'buyer';
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_cart_items TO 'buyer';      -- CORREGIDO: era tbd_carts_items
+GRANT SELECT, INSERT ON db_test.tbd_buyer_orders TO 'buyer';            -- CORREGIDO: era tb_buyer_orders
+GRANT SELECT, INSERT, UPDATE ON db_test.tbd_users_wishlist_products TO 'buyer';
+
+-- user not registered --
+GRANT INSERT ON db_test.tb_users TO 'user_not_registered';
+GRANT INSERT ON db_test.tb_people TO 'user_not_registered';
+
+-- common user--
+GRANT SELECT ON db_test.tb_products TO 'common_user';
+
+/* =========================================================
+   4. ASIGNACIÓN DE ROLES A LOS USUARIOS
+   ========================================================= */
+GRANT 'superadmin' TO 'carlos.morales'@'%';
+GRANT 'admin' TO 'marco.ramirez'@'%', 'jonhy.neri'@'%';                 -- CORREGIDO: faltaba jonhy.neri
+GRANT 'support' TO 'adrian.rios'@'%';                                   -- CORREGIDO: faltaba este GRANT
+GRANT 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
+GRANT 'user_not_registered' TO 'app_movil'@'%', 'app_web'@'%';
+GRANT 'buyer' TO 'app_movil'@'%', 'app_web'@'%';                        -- NUEVO: sin esto SET ROLE 'buyer' falla (error 3530)
+
+/* =========================================================
+   5. ACTIVACIÓN DE ROLES POR DEFECTO
+   ========================================================= */
+SET DEFAULT ROLE 'superadmin' TO 'carlos.morales'@'%';
+SET DEFAULT ROLE 'admin' TO 'marco.ramirez'@'%', 'jonhy.neri'@'%';
+SET DEFAULT ROLE 'support' TO 'adrian.rios'@'%';
+SET DEFAULT ROLE 'seller' TO 'pablo.reyes'@'%', 'saul.barrios'@'%';
+SET DEFAULT ROLE 'user_not_registered' TO 'app_movil'@'%', 'app_web'@'%';
+
+/* =========================================================
+   6. FINALIZACIÓN
+   ========================================================= */
+FLUSH PRIVILEGES;
+
+SELECT "Los usuarios, roles y privilegios han sido creados y asignados correctamente" AS mensaje;
